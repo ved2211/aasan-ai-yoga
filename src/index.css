@@ -1,0 +1,263 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+/* ─── DESIGN TOKENS ─────────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg-color:         #0A0A0A;
+  --bg-surface:       #111111;
+  --bg-surface-hover: #1A1A1A;
+  --bg-elevated:      #1F1F1F;
+
+  /* Accent — single electric lime, used sparingly */
+  --primary:          #D4FF4F;
+  --primary-hover:    #C8F53E;
+  --primary-dim:      rgba(212, 255, 79, 0.08);
+
+  /* Semantic colors — desaturated, professional */
+  --success:          #4ADE80;
+  --warning:          #FACC15;
+  --danger:           #F87171;
+  --accent:           #A3A3A3;
+
+  /* Text */
+  --text-main:        #FFFFFF;
+  --text-secondary:   #A3A3A3;
+  --text-muted:       #525252;
+
+  /* Borders */
+  --border:           #262626;
+  --border-subtle:    #1A1A1A;
+}
+
+/* ─── BASE RESET ─────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 15px;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+/* ─── LAYOUT ─────────────────────────────────────────────────────────────────── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 2rem 2rem;
+}
+
+.page-content {
+  padding-top: 64px;
+  min-height: calc(100vh - 64px);
+}
+
+/* ─── CARD / PANEL ───────────────────────────────────────────────────────────── */
+/* Replaces glassmorphism with clean solid dark cards + Micro-interactions */
+.glass-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              border-color 0.3s ease, 
+              box-shadow 0.3s ease;
+}
+
+/* Hover effect: Subtle lift + lime glow */
+.glass-panel:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212, 255, 79, 0.3);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.8), 
+              0 0 20px -5px rgba(212, 255, 79, 0.08);
+}
+
+/* ─── BUTTONS ────────────────────────────────────────────────────────────────── */
+.btn {
+  background: var(--primary);
+  color: #000000;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px -6px rgba(212, 255, 79, 0.4);
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.95);
+  box-shadow: none;
+  transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.glass-panel:active {
+  transform: scale(0.98);
+  transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ─── RIPPLE EFFECT ──────────────────────────────────────────────────────────── */
+.ripple-span {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(0);
+  animation: ripple-anim 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple-anim {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+
+.btn-secondary:hover {
+  background: var(--bg-surface-hover);
+  border-color: #3A3A3A;
+  color: var(--text-main);
+}
+
+/* ─── TYPOGRAPHY ─────────────────────────────────────────────────────────────── */
+/* Replaces rainbow gradients with clean accent */
+.gradient-text {
+  color: var(--text-main);
+  display: inline-block;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.gradient-text .accent {
+  color: var(--primary);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+/* ─── FORM ELEMENTS ──────────────────────────────────────────────────────────── */
+select, input {
+  background: var(--bg-surface-hover);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-main);
+  padding: 9px 14px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+select:focus, input:focus {
+  border-color: var(--primary);
+}
+
+/* ─── LOADING SPINNER ────────────────────────────────────────────────────────── */
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── SKELETON LOADERS ───────────────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-surface-hover) 0px, var(--border) 40px, var(--bg-surface-hover) 80px);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 8px;
+}
+
+.skeleton-text {
+  height: 14px;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.skeleton-text.short { width: 50%; }
+.skeleton-title { height: 24px; width: 60%; margin-bottom: 16px; }
+.skeleton-card { height: 120px; width: 100%; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ─── PAGE TRANSITIONS ───────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* ─── SCROLLBAR ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-color); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #3A3A3A; }
+
+/* ─── MOBILE OVERRIDES (bottom tab bar) ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  .container { padding: 1.25rem; }
+  .page-content { padding-bottom: 80px; }
+  .responsive-grid { grid-template-columns: 1fr !important; }
+  .responsive-header { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+}

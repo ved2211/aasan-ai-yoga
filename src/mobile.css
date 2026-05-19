@@ -1,0 +1,76 @@
+/* mobile.css - Global Mobile Responsiveness Overrides */
+
+@media (max-width: 768px) {
+  /* Navbar Overrides - Convert to Bottom Tab Bar */
+  .navbar {
+    top: auto !important;
+    bottom: 0 !important;
+    height: 70px !important;
+    border-top: 1px solid var(--border) !important;
+    border-bottom: none !important;
+    background: var(--bg-surface) !important;
+  }
+  .logo { display: none !important; }
+  .nav-container { padding: 0 10px !important; }
+  .nav-links {
+    width: 100% !important;
+    justify-content: space-around !important;
+    gap: 0px !important;
+  }
+  .nav-link {
+    flex-direction: column !important;
+    padding: 8px !important;
+    gap: 4px !important;
+    font-size: 0.7rem !important;
+  }
+  .nav-link span { display: block !important; }
+
+  /* Dashboard Overrides */
+  .dashboard-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 15px !important;
+  }
+  .dashboard-header h1 { font-size: 2rem !important; }
+  .stats-container, .dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Yoga Session Overrides */
+  .session-layout {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+    gap: 1.5rem !important;
+  }
+  .session-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 15px !important;
+  }
+  .header-left {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  .asana-selector-wrapper, .asana-selector { width: 100% !important; }
+  .main-camera { height: 400px !important; }
+
+  /* Generic Responsive Grid Classes */
+  .responsive-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .responsive-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  /* App Container Padding for Bottom Tab Bar */
+  .app-container {
+    padding-bottom: 80px !important;
+  }
+  .page-content {
+    padding-top: 20px !important;
+  }
+}
