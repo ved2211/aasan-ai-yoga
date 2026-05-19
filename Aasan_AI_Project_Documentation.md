@@ -25,7 +25,13 @@ The application does not just guess if a pose is correct; it calculates the exac
    * *Formula used:* `Angle = Math.acos( (a² + b² - c²) / (2ab) ) * (180/π)`
 3. **Accuracy Scoring:** Each target pose (like Tadasana or Tree Pose) has predefined "ideal" angles. The AI compares the user's real-time angles against the ideal angles and outputs an accuracy percentage (0% to 100%).
 
-### B. Dynamic Calorie & Diet Calculation
+### B. Machine Learning KNN Pose Normalization (`knnClassifier.js`)
+To ensure that a user's distance from the camera or their height does not ruin the tracking accuracy, we implemented a custom **K-Nearest Neighbors (KNN)** normalization algorithm.
+1. **Centering:** The algorithm finds the mathematical center of the body (the midpoint between the left and right hips `landmarks[23]` and `landmarks[24]`). It subtracts this center point from all 33 joints to center the skeleton exactly at `(0,0,0)` on a Cartesian plane.
+2. **Torso Scaling:** It measures the "Torso Size" (distance from the center of the hips to the center of the shoulders). It divides every joint's coordinate by this torso size. This brilliantly normalizes the skeleton so that a 5ft person standing far away produces the exact same data matrix as a 6ft person standing up close.
+3. **3D Euclidean Distance (L2 Norm):** To calculate how perfectly a user matches an ideal pose, the algorithm runs a loop measuring the 3D distance between the user's normalized joints and the target pose's normalized joints: `Math.sqrt( (x1-x2)² + (y1-y2)² + (z1-z2)² )`. 
+
+### C. Dynamic Calorie & Diet Calculation
 Instead of providing generic diet plans, the app calculates exact metabolic exertion based on *how hard* and *how long* the user practiced.
 
 1. **Metabolic Equivalent (Burn Rate):**
