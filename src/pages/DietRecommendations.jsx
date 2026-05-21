@@ -308,10 +308,10 @@ const getCalorieData = (todaySessions) => {
 };
 
 const exertionLabels = {
-  none: { label: 'No Sessions Today', color: 'var(--text-muted)', emoji: '😴' },
-  low: { label: 'Low Exertion', color: 'var(--primary)', emoji: '🧘' },
-  moderate: { label: 'Moderate Exertion', color: 'var(--warning)', emoji: '💪' },
-  high: { label: 'High Exertion', color: 'var(--danger)', emoji: '🔥' }
+  none: { label: 'Resting State', color: 'var(--text-muted)', emoji: '' },
+  low: { label: 'Low Metabolic Demand', color: '#38BDF8', emoji: '' },
+  moderate: { label: 'Moderate Metabolic Demand', color: '#FACC15', emoji: '' },
+  high: { label: 'High Metabolic Demand', color: '#F87171', emoji: '' }
 };
 
 const DietRecommendations = () => {
@@ -361,9 +361,8 @@ const DietRecommendations = () => {
     } else if (brewingTimeLeft === 0 && isBrewing) {
       setIsBrewing(false);
       if (timerRef.current) clearInterval(timerRef.current);
-      toast.success("✨ Your Ayurvedic Herbal Elixir is perfectly steeped! Pour, breathe, and enjoy.", {
-        duration: 5000,
-        icon: '🫖'
+      toast.success("Herbal infusion steep cycle completed.", {
+        duration: 5000
       });
     }
 
@@ -448,7 +447,7 @@ const DietRecommendations = () => {
   const copyGroceryList = () => {
     const listString = plan.grocery.map(item => `[ ] ${item}`).join('\n');
     navigator.clipboard.writeText(`My Yoga Diet Shopping List (${preference} - ${exertionInfo.label}):\n\n${listString}`)
-      .then(() => toast.success('Grocery list copied to clipboard! 🛒'))
+      .then(() => toast.success('Procurement list copied to clipboard.'))
       .catch(() => toast.error('Failed to copy. Please try again.'));
   };
 
@@ -511,8 +510,8 @@ const DietRecommendations = () => {
         saveQuizData(nextAnswers, dominant),
         {
           loading: 'Saving constitution profile to Firebase Firestore...',
-          success: <b>Ayurvedic profile successfully saved to Firestore! ☁️</b>,
-          error: <b>Could not save to Firestore. Check security rules or auth state. ⚠️</b>,
+          success: <b>Constitution profile saved to database.</b>,
+          error: <b>Database synch failed.</b>,
         },
         {
           duration: 5000
@@ -520,8 +519,7 @@ const DietRecommendations = () => {
       );
       
       setQuizStep(4);
-      toast.success(`Complete! Your dominant Ayurvedic Dosha profile is: ${doshaProfiles[dominant].name}`, {
-        icon: '🕉️',
+      toast.success(`Analysis Complete: ${doshaProfiles[dominant].name}`, {
         duration: 4000
       });
     }
@@ -554,7 +552,7 @@ const DietRecommendations = () => {
         <div>
           <h1 className="gradient-text">Diet & Holistic <span className="accent">Nutrition</span></h1>
           <p className="subtitle" style={{ color: 'var(--text-muted)' }}>
-            Personalized yogic fuel matching **today's physical exertion** and ancient Ayurvedic sciences.
+            Clinical nutrition guidance mapped to your physiological exertion metrics and traditional Ayurvedic constitutional science.
           </p>
         </div>
       </header>
@@ -562,34 +560,36 @@ const DietRecommendations = () => {
       {/* Exertion Banner */}
       <div className="glass-panel" style={{ padding: '1.2rem 1.5rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', borderLeft: `4px solid ${exertionInfo.color}` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <span style={{ fontSize: '2rem' }}>{exertionInfo.emoji}</span>
+          {exertionInfo.color !== 'var(--text-muted)' && (
+            <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: exertionInfo.color, display: 'inline-block' }}></span>
+          )}
           <div>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '2px' }}>TODAY'S EXERTION LEVEL</p>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '2px' }}>TODAY'S METABOLIC LOAD</p>
             <h3 style={{ color: exertionInfo.color }}>{exertionInfo.label}</h3>
           </div>
         </div>
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>SESSIONS</p>
-            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--primary)' }}>{todaySessions.length}</p>
+            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--text-main)' }}>{todaySessions.length}</p>
           </div>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>DURATION</p>
-            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--primary)' }}>
+            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--text-main)' }}>
               {todayDuration > 60 ? `${Math.floor(todayDuration/60)}m` : `${todayDuration}s`}
             </p>
           </div>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>AVG ACCURACY</p>
-            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--success)' }}>{todayAvgAccuracy}%</p>
+            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--text-main)' }}>{todayAvgAccuracy}%</p>
           </div>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>CALORIES BURNED</p>
-            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--danger)' }}>{caloriesBurned} kcal</p>
+            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--text-main)' }}>{caloriesBurned} kcal</p>
           </div>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>REC. DAILY INTAKE</p>
-            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--warning)' }}>~{baseCalories} kcal</p>
+            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--text-main)' }}>~{baseCalories} kcal</p>
           </div>
         </div>
       </div>
@@ -603,48 +603,57 @@ const DietRecommendations = () => {
           <div className="glass-panel" style={{ padding: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', borderBottom: '1px solid var(--border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
               <div>
-                <h3 style={{ fontSize: '1.15rem' }}>🎯 Personalized Yoga Nutrition Goal</h3>
-                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Adjusts total calories & macro ratios to match your target focus.</p>
+                <h3 style={{ fontSize: '1.15rem' }}>Personalized Nutritional Direction</h3>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Caloric and macronutrient calibration configured for your core training objectives.</p>
               </div>
-              <div style={{ display: 'flex', gap: '6px' }}>
+              <div style={{ display: 'flex', background: 'var(--bg-surface-hover)', padding: '4px', borderRadius: '8px', border: '1px solid var(--border)' }}>
                 <button 
                   onClick={() => setGoal('Vitality')}
-                  className="btn"
                   style={{ 
-                    background: goal === 'Vitality' ? 'var(--primary)' : 'var(--bg-surface-hover)', 
-                    color: goal === 'Vitality' ? '#000' : 'var(--text-main)',
-                    border: '1px solid var(--border)',
+                    background: goal === 'Vitality' ? 'var(--bg-surface)' : 'transparent', 
+                    color: goal === 'Vitality' ? 'var(--text-main)' : 'var(--text-secondary)',
+                    border: goal === 'Vitality' ? '1px solid var(--border)' : '1px solid transparent',
+                    borderRadius: '6px',
                     padding: '6px 12px',
-                    fontSize: '0.78rem'
+                    fontSize: '0.78rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
                   }}
                 >
-                  🧘 Balance
+                  Balance
                 </button>
                 <button 
                   onClick={() => setGoal('Recovery')}
-                  className="btn"
                   style={{ 
-                    background: goal === 'Recovery' ? 'var(--primary)' : 'var(--bg-surface-hover)', 
-                    color: goal === 'Recovery' ? '#000' : 'var(--text-main)',
-                    border: '1px solid var(--border)',
+                    background: goal === 'Recovery' ? 'var(--bg-surface)' : 'transparent', 
+                    color: goal === 'Recovery' ? 'var(--text-main)' : 'var(--text-secondary)',
+                    border: goal === 'Recovery' ? '1px solid var(--border)' : '1px solid transparent',
+                    borderRadius: '6px',
                     padding: '6px 12px',
-                    fontSize: '0.78rem'
+                    fontSize: '0.78rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
                   }}
                 >
-                  ⚡ Deep Recovery
+                  Deep Recovery
                 </button>
                 <button 
                   onClick={() => setGoal('Weight')}
-                  className="btn"
                   style={{ 
-                    background: goal === 'Weight' ? 'var(--primary)' : 'var(--bg-surface-hover)', 
-                    color: goal === 'Weight' ? '#000' : 'var(--text-main)',
-                    border: '1px solid var(--border)',
+                    background: goal === 'Weight' ? 'var(--bg-surface)' : 'transparent', 
+                    color: goal === 'Weight' ? 'var(--text-main)' : 'var(--text-secondary)',
+                    border: goal === 'Weight' ? '1px solid var(--border)' : '1px solid transparent',
+                    borderRadius: '6px',
                     padding: '6px 12px',
-                    fontSize: '0.78rem'
+                    fontSize: '0.78rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
                   }}
                 >
-                  🔥 Weight Mgmt
+                  Weight Management
                 </button>
               </div>
             </div>
@@ -652,82 +661,92 @@ const DietRecommendations = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
               <div>
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Active Diet Style</span>
-                <p style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>Based on {preference} plan ({goal} mode)</p>
+                <p style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--text-main)' }}>Based on {preference} plan ({goal} mode)</p>
               </div>
               <select
                 value={preference}
                 onChange={(e) => setPreference(e.target.value)}
-                style={{ padding: '8px 12px', borderRadius: '8px', background: 'var(--bg-surface-hover)', color: 'var(--text-main)', border: '1px solid var(--border)', outline: 'none', cursor: 'pointer' }}
+                style={{ 
+                  padding: '8px 12px', 
+                  borderRadius: '8px', 
+                  background: 'var(--bg-surface-hover)', 
+                  color: 'var(--text-main)', 
+                  border: '1px solid var(--border)', 
+                  outline: 'none', 
+                  cursor: 'pointer',
+                  fontSize: '0.82rem',
+                  fontWeight: '500'
+                }}
               >
-                <option value="Balanced">🍱 Balanced Diet</option>
-                <option value="Vegan">🌱 Vegan Diet</option>
-                <option value="Keto">🥩 Keto Diet</option>
+                <option value="Balanced">Balanced Diet</option>
+                <option value="Vegan">Vegan Diet</option>
+                <option value="Keto">Keto Diet</option>
               </select>
             </div>
           </div>
 
           {/* AI MEAL PLAN TIMELINE */}
           <div className="glass-panel" style={{ padding: '2rem' }}>
-            <h2 style={{ marginBottom: '1.2rem' }}>Today's AI Meal Plan</h2>
+            <h2 style={{ marginBottom: '1.2rem', fontSize: '1.25rem' }}>Daily Physiological Meal Plan</h2>
 
             {/* AI Reasoning */}
-            <div style={{ padding: '1rem', background: 'rgba(212, 255, 79, 0.05)', borderRadius: '10px', marginBottom: '1.5rem', fontSize: '0.85rem', color: 'var(--text-muted)', borderLeft: '3px solid var(--primary)' }}>
-              🤖 <strong style={{ color: 'var(--primary)' }}>AI Nutritionist:</strong>{' '}
-              {exertion === 'none' && "No sessions detected today. Showing a light maintenance plan. Start a session to unlock full exertion sync!"}
-              {exertion === 'low' && `Detected ${todaySessions.length} low-exertion session(s) (${todayDuration}s). Recommended plan matches a light energy expenditure, customized for ${goal.toLowerCase()} goal.`}
-              {exertion === 'moderate' && `Active yoga session of ${Math.floor(todayDuration/60)}m done. Adjusting proteins and nutrients to prevent muscle soreness and recover core strength.`}
-              {exertion === 'high' && `Strong practice! ${todayAvgAccuracy}% accuracy in ${Math.floor(todayDuration/60)} minutes. Body is ready for maximum calorie loading and recovery nutrients!`}
+            <div style={{ padding: '1rem', background: 'var(--bg-surface-hover)', borderRadius: '10px', marginBottom: '1.5rem', fontSize: '0.82rem', color: 'var(--text-secondary)', border: '1px solid var(--border)', borderLeft: '3px solid var(--text-secondary)' }}>
+              <strong style={{ color: 'var(--text-main)' }}>AI NUTRITION SYSTEM FEEDBACK:</strong>{' '}
+              {exertion === 'none' && "No active sessions registered today. Directing standard resting maintenance plan. Complete a session to recalculate metabolic demand."}
+              {exertion === 'low' && `Identified ${todaySessions.length} low-metabolic workload session(s) (${todayDuration}s). Caloric intake is balanced at base maintenance levels, configured for your ${goal.toLowerCase()} objective.`}
+              {exertion === 'moderate' && `Active yoga workload of ${Math.floor(todayDuration/60)}m registered. Adjusting amino acid and glucose ratios to sustain muscle recovery and core stabilization.`}
+              {exertion === 'high' && `High-intensity practice completed. ${todayAvgAccuracy}% accuracy over ${Math.floor(todayDuration/60)} minutes. Up-regulating recovery macronutrients and physiological glycogen replacers.`}
             </div>
 
             {/* timeline */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', position: 'relative' }}>
-              <div style={{ position: 'absolute', left: '16px', top: '15px', bottom: '15px', width: '2px', background: 'var(--border)', zIndex: 1 }}></div>
+              <div style={{ position: 'absolute', left: '16px', top: '15px', bottom: '15px', width: '1px', background: 'var(--border)', zIndex: 1 }}></div>
 
               {/* Meal 1 */}
               <div style={{ display: 'flex', gap: '1.2rem', position: 'relative', zIndex: 2 }}>
-                <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', boxShadow: '0 0 10px rgba(212,255,79,0.3)', flexShrink: 0, color: '#000' }}>
-                  🌅
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', flexShrink: 0 }}>
+                  01
                 </div>
-                <div style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', borderLeft: '4px solid var(--primary)', width: '100%' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 1 • {plan.pre.title}</span>
-                  <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.1rem', color: 'var(--text-main)' }}>{plan.pre.desc}</h3>
-                  <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{plan.pre.why}</p>
+                <div style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', border: '1px solid var(--border)', width: '100%' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 1 • {plan.pre.title}</span>
+                  <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.05rem', color: 'var(--text-main)' }}>{plan.pre.desc}</h3>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{plan.pre.why}</p>
                 </div>
               </div>
 
               {/* Meal 2 */}
               <div style={{ display: 'flex', gap: '1.2rem', position: 'relative', zIndex: 2 }}>
-                <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', boxShadow: '0 0 10px rgba(74,222,128,0.3)', flexShrink: 0, color: '#000' }}>
-                  🧘
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', flexShrink: 0 }}>
+                  02
                 </div>
-                <div style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', borderLeft: '4px solid var(--success)', width: '100%' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--success)', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 2 • {plan.post.title}</span>
-                  <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.1rem', color: 'var(--text-main)' }}>{plan.post.desc}</h3>
-                  <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{plan.post.why}</p>
+                <div style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', border: '1px solid var(--border)', width: '100%' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 2 • {plan.post.title}</span>
+                  <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.05rem', color: 'var(--text-main)' }}>{plan.post.desc}</h3>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{plan.post.why}</p>
                 </div>
               </div>
 
               {/* Meal 3 */}
               <div style={{ display: 'flex', gap: '1.2rem', position: 'relative', zIndex: 2 }}>
-                <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', boxShadow: '0 0 10px rgba(163,163,163,0.3)', flexShrink: 0, color: '#000' }}>
-                  ⚡
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', flexShrink: 0 }}>
+                  03
                 </div>
-                <div style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', borderLeft: '4px solid var(--accent)', width: '100%' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 3 • {plan.mid.title}</span>
-                  <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.1rem', color: 'var(--text-main)' }}>{plan.mid.desc}</h3>
-                  <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{plan.mid.why}</p>
+                <div style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', border: '1px solid var(--border)', width: '100%' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 3 • {plan.mid.title}</span>
+                  <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.05rem', color: 'var(--text-main)' }}>{plan.mid.desc}</h3>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{plan.mid.why}</p>
                 </div>
               </div>
 
               {/* Meal 4 */}
               <div style={{ display: 'flex', gap: '1.2rem', position: 'relative', zIndex: 2 }}>
-                <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'var(--warning)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', boxShadow: '0 0 10px rgba(250,204,21,0.3)', flexShrink: 0, color: '#000' }}>
-                  🌙
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', flexShrink: 0 }}>
+                  04
                 </div>
-                <div style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', borderLeft: '4px solid var(--warning)', width: '100%' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--warning)', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 4 • {plan.dinner.title}</span>
-                  <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.1rem', color: 'var(--text-main)' }}>{plan.dinner.desc}</h3>
-                  <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{plan.dinner.why}</p>
+                <div style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', border: '1px solid var(--border)', width: '100%' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 4 • {plan.dinner.title}</span>
+                  <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.05rem', color: 'var(--text-main)' }}>{plan.dinner.desc}</h3>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{plan.dinner.why}</p>
                 </div>
               </div>
             </div>
@@ -735,13 +754,13 @@ const DietRecommendations = () => {
 
           {/* SUPERFOODS SPOTLIGHT */}
           <div className="glass-panel" style={{ padding: '2rem' }}>
-            <h2 style={{ marginBottom: '0.5rem' }}>✨ Yogic Superfoods Spotlight</h2>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Ayurvedic and modern functional foods matching your active exertion level.</p>
+            <h2 style={{ marginBottom: '0.5rem', fontSize: '1.25rem' }}>Physiological Superfoods</h2>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Functional nutrients selected to align with your current metabolic workload state.</p>
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }} className="responsive-grid">
               {superfoods[exertion].map((food, idx) => (
                 <div key={idx} style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', height: '100%' }}>
-                  <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{food.benefit}</span>
+                  <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{food.benefit}</span>
                   <h4 style={{ margin: '4px 0 8px 0', fontSize: '0.98rem', fontWeight: '700', color: 'var(--text-main)' }}>{food.name}</h4>
                   <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: '1.4', marginTop: 'auto' }}>{food.desc}</p>
                 </div>
@@ -751,28 +770,25 @@ const DietRecommendations = () => {
 
           {/* DYNAMIC ROTATING AYURVEDIC DOSHA QUIZ CARD */}
           <div className="glass-panel" style={{ padding: '2.2rem 2rem', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', right: '-40px', top: '-40px', width: '150px', height: '150px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(212,255,79,0.06) 0%, transparent 70%)', zIndex: 1 }}></div>
-
             <div style={{ position: 'relative', zIndex: 2 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '1.5rem' }}>🕉️</span>
                 <h2>Ayurvedic Mind-Body Constitution</h2>
               </div>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-                Discover your custom genetic elemental balance (Dosha) to unlock deep dietary recommendations.
+                Evaluate your baseline genetic composition (Dosha) to integrate traditional Ayurvedic sciences.
               </p>
 
               {/* Quiz Initial State */}
               {quizStep === 0 && (
                 <div style={{ textAlign: 'center', padding: '2rem 1rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', border: '1px dashed var(--border)' }}>
                   <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1.2rem', maxWidth: '420px', margin: '0 auto 1.2rem auto' }}>
-                    Take our quick, dynamic diagnostic assessment to calculate your dominant physical constitution (**Vata**, **Pitta**, or **Kapha**).
+                    Initiate diagnostic assessment to calculate your baseline physical constitution (Vata, Pitta, or Kapha).
                   </p>
                   
                   {quizzes && quizzes.length > 0 && (
-                    <div style={{ margin: '0 auto 1.5rem auto', maxWidth: '520px', padding: '12px 16px', background: 'rgba(212, 255, 79, 0.04)', borderRadius: '10px', border: '1px solid rgba(212, 255, 79, 0.15)', textAlign: 'left', fontSize: '0.8rem', lineHeight: '1.4' }}>
-                      <span style={{ display: 'inline-block', background: 'var(--primary)', color: '#000', padding: '2px 6px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '6px' }}>
-                        ✨ ADAPTIVE AI MODE ACTIVE
+                    <div style={{ margin: '0 auto 1.5rem auto', maxWidth: '520px', padding: '12px 16px', background: 'var(--bg-surface)', borderRadius: '10px', border: '1px solid var(--border)', textAlign: 'left', fontSize: '0.8rem', lineHeight: '1.4' }}>
+                      <span style={{ display: 'inline-block', background: 'var(--border)', color: 'var(--text-main)', border: '1px solid var(--border)', padding: '2px 6px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '6px' }}>
+                        ADAPTIVE ASSESSMENT ENGINE ACTIVE
                       </span>
                       <p style={{ color: 'var(--text-main)', marginBottom: '4px' }}>
                         Detected a previous assessment from {new Date(quizzes[0].date).toLocaleDateString()} ({new Date(quizzes[0].date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}).
@@ -784,11 +800,11 @@ const DietRecommendations = () => {
                   )}
 
                   <button className="btn" onClick={initializeQuiz}>
-                    {dominantDosha ? "Retake Adaptive Quiz 🔄" : "Start Shuffled Quiz 📿"}
+                    {dominantDosha ? "Retake Adaptive Profile" : "Start Profiling Assessment"}
                   </button>
                   {dominantDosha && (
                     <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '8px' }}>
-                      Currently active profile: <strong style={{ color: doshaProfiles[dominantDosha].color }}>{doshaProfiles[dominantDosha].name}</strong>
+                      Active Baseline: <strong style={{ color: doshaProfiles[dominantDosha].color }}>{doshaProfiles[dominantDosha].name}</strong>
                     </p>
                   )}
                 </div>
@@ -798,13 +814,13 @@ const DietRecommendations = () => {
               {quizStep > 0 && quizStep <= 3 && activeQuestions.length > 0 && (
                 <div style={{ background: 'var(--bg-surface-hover)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.8rem', fontWeight: 'bold' }}>
-                    <span>QUESTION {quizStep} OF 3</span>
-                    <span style={{ color: 'var(--primary)' }}>{Math.round(((quizStep - 1) / 3) * 100)}% COMPLETE</span>
+                    <span>PARAMETER {quizStep} OF 3</span>
+                    <span style={{ color: 'var(--text-secondary)' }}>{Math.round(((quizStep - 1) / 3) * 100)}% DETECTED</span>
                   </div>
                   
                   {/* Progress Line */}
                   <div style={{ width: '100%', height: '4px', background: 'var(--border)', borderRadius: '2px', marginBottom: '1.5rem', overflow: 'hidden' }}>
-                    <div style={{ width: `${(quizStep / 3) * 100}%`, height: '100%', background: 'var(--primary)', transition: 'width 0.3s ease' }}></div>
+                    <div style={{ width: `${(quizStep / 3) * 100}%`, height: '100%', background: 'var(--text-secondary)', transition: 'width 0.3s ease' }}></div>
                   </div>
 
                   <h3 style={{ fontSize: '1.1rem', marginBottom: '1.2rem', lineHeight: '1.4', color: 'var(--text-main)' }}>
@@ -860,15 +876,15 @@ const DietRecommendations = () => {
                   </p>
 
                   <div style={{ padding: '1rem', background: 'var(--bg-surface)', borderRadius: '8px', borderLeft: `3px solid ${doshaProfiles[dominantDosha].color}`, marginBottom: '1rem', fontSize: '0.82rem' }}>
-                    💡 <strong>Nutritional Guide:</strong> {doshaProfiles[dominantDosha].advice}
+                    <strong>NUTRITIONAL CALIBRATION:</strong> {doshaProfiles[dominantDosha].advice}
                   </div>
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border)', paddingTop: '1rem', flexWrap: 'wrap', gap: '10px' }}>
                     <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                      🌿 Herbal Ally: <strong style={{ color: 'var(--text-main)' }}>{doshaProfiles[dominantDosha].ally}</strong>
+                      Herbal Protocol: <strong style={{ color: 'var(--text-main)' }}>{doshaProfiles[dominantDosha].ally}</strong>
                     </span>
                     <button className="btn btn-secondary" onClick={resetQuiz} style={{ padding: '6px 12px', fontSize: '0.75rem' }}>
-                      Retake Assessment (New Pool 🔄)
+                      Re-evaluate Constitution
                     </button>
                   </div>
                 </div>
@@ -883,74 +899,78 @@ const DietRecommendations = () => {
           
           {/* Hydration */}
           <div className="glass-panel" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-            <h2 style={{ marginBottom: '0.5rem' }}>Hydration</h2>
+            <h2 style={{ marginBottom: '0.5rem', fontSize: '1.25rem' }}>Systemic Hydration</h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.2rem' }}>
-              Goal today: <strong style={{ color: 'var(--primary)' }}>{plan.water} glasses</strong>
+              Physiological target: <strong style={{ color: 'var(--text-main)' }}>{plan.water} Units</strong>
             </p>
 
             <div style={{
               position: 'relative', width: '140px', height: '140px', borderRadius: '50%',
-              background: `conic-gradient(var(--primary) ${(waterGlasses / plan.water) * 360}deg, var(--bg-surface-hover) 0deg)`,
+              background: `conic-gradient(#38bdf8 ${(waterGlasses / plan.water) * 360}deg, var(--bg-surface-hover) 0deg)`,
               display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem'
             }}>
               <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'var(--bg-surface)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ fontSize: '2.2rem', fontWeight: '700', color: 'var(--primary)', lineHeight: '1' }}>{waterGlasses}</span>
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '4px' }}>/ {plan.water} glasses</span>
+                <span style={{ fontSize: '2.2rem', fontWeight: '700', color: 'var(--text-main)', lineHeight: '1' }}>{waterGlasses}</span>
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '4px' }}>/ {plan.water} Units</span>
               </div>
             </div>
 
-            <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-              {waterGlasses >= plan.water ? '🏆 Daily goal reached!' : `${plan.water - waterGlasses} more glasses to go!`}
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem', fontWeight: '500' }}>
+              {waterGlasses >= plan.water ? 'Target Intake Achieved' : `${plan.water - waterGlasses} units remaining to meet target`}
             </p>
 
-            <button className="btn" onClick={() => setWaterGlasses(prev => prev < plan.water ? prev + 1 : prev)}
-              style={{ width: '100%', justifyContent: 'center' }} disabled={waterGlasses >= plan.water}>
-              + Add Glass 💧
+            <button 
+              className="btn btn-secondary" 
+              onClick={() => setWaterGlasses(prev => prev < plan.water ? prev + 1 : prev)}
+              style={{ width: '100%', justifyContent: 'center', padding: '10px 16px', fontSize: '0.85rem' }} 
+              disabled={waterGlasses >= plan.water}
+            >
+              Add Intake Unit
             </button>
-            <button className="btn btn-secondary" onClick={() => setWaterGlasses(0)}
-              style={{ width: '100%', justifyContent: 'center', marginTop: '0.8rem' }}>
-              Reset
+            <button className="btn" onClick={() => setWaterGlasses(0)}
+              style={{ width: '100%', justifyContent: 'center', marginTop: '0.8rem', padding: '10px 16px', fontSize: '0.85rem', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
+              Reset Metrics
             </button>
 
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '0.8rem', width: '100%' }}>
-              💡 {exertion === 'high' ? "Cramping risk is High. Add a pinch of pink salt to your water." : "Keep sipping water regularly to maintain peak muscle flexibility."}
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '0.8rem', width: '100%', lineHeight: '1.4' }}>
+              {exertion === 'high' ? "Electrolyte Balance Alert: High exertion detected. Supplement intake with key minerals." : "Maintain baseline hydration increments to sustain muscle elasticity and joint fluid dynamics."}
             </p>
           </div>
 
           {/* MACRONUTRIENT VISUALIZER */}
           <div className="glass-panel" style={{ padding: '1.8rem 1.5rem' }}>
-            <h2 style={{ marginBottom: '0.4rem', fontSize: '1.15rem' }}>🎯 Goal Macro Splits</h2>
-            <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '1.2rem' }}>Recommended ratios for your {preference} diet</p>
+            <h2 style={{ marginBottom: '0.4rem', fontSize: '1.15rem' }}>Macronutrient Distribution</h2>
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '1.2rem' }}>Target configuration ratios for your active {preference} profile</p>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '4px', fontWeight: '500' }}>
-                  <span>🍞 Carbs ({baseMacros.carbs}%)</span>
-                  <span style={{ color: 'var(--primary)' }}>{carbGrams}g</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>Carbohydrates ({baseMacros.carbs}%)</span>
+                  <span style={{ color: 'var(--text-main)' }}>{carbGrams}g</span>
                 </div>
                 <div style={{ width: '100%', height: '6px', background: 'var(--bg-surface-hover)', borderRadius: '3px', overflow: 'hidden' }}>
-                  <div style={{ width: `${baseMacros.carbs}%`, height: '100%', background: 'var(--primary)', borderRadius: '3px', transition: 'width 0.3s ease' }}></div>
+                  <div style={{ width: `${baseMacros.carbs}%`, height: '100%', background: '#60a5fa', borderRadius: '3px', transition: 'width 0.3s ease' }}></div>
                 </div>
               </div>
 
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '4px', fontWeight: '500' }}>
-                  <span>💪 Protein ({baseMacros.protein}%)</span>
-                  <span style={{ color: 'var(--success)' }}>{proteinGrams}g</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>Proteins ({baseMacros.protein}%)</span>
+                  <span style={{ color: 'var(--text-main)' }}>{proteinGrams}g</span>
                 </div>
                 <div style={{ width: '100%', height: '6px', background: 'var(--bg-surface-hover)', borderRadius: '3px', overflow: 'hidden' }}>
-                  <div style={{ width: `${baseMacros.protein}%`, height: '100%', background: 'var(--success)', borderRadius: '3px', transition: 'width 0.3s ease' }}></div>
+                  <div style={{ width: `${baseMacros.protein}%`, height: '100%', background: '#34d399', borderRadius: '3px', transition: 'width 0.3s ease' }}></div>
                 </div>
               </div>
 
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '4px', fontWeight: '500' }}>
-                  <span>🥑 Fats ({baseMacros.fats}%)</span>
-                  <span style={{ color: 'var(--warning)' }}>{fatGrams}g</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>Lipids / Fats ({baseMacros.fats}%)</span>
+                  <span style={{ color: 'var(--text-main)' }}>{fatGrams}g</span>
                 </div>
                 <div style={{ width: '100%', height: '6px', background: 'var(--bg-surface-hover)', borderRadius: '3px', overflow: 'hidden' }}>
-                  <div style={{ width: `${baseMacros.fats}%`, height: '100%', background: 'var(--warning)', borderRadius: '3px', transition: 'width 0.3s ease' }}></div>
+                  <div style={{ width: `${baseMacros.fats}%`, height: '100%', background: '#fbbf24', borderRadius: '3px', transition: 'width 0.3s ease' }}></div>
                 </div>
               </div>
 
@@ -960,11 +980,10 @@ const DietRecommendations = () => {
           {/* TEA BREWER */}
           <div className="glass-panel" style={{ padding: '1.8rem 1.5rem', textAlign: 'left' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.3rem' }}>
-              <span style={{ fontSize: '1.2rem' }}>🫖</span>
-              <h2 style={{ fontSize: '1.15rem' }}>Pranic Tea Brewer</h2>
+              <h2 style={{ fontSize: '1.15rem' }}>Circadian Infusion Engine</h2>
             </div>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-              Brew the perfect Ayurvedic infusion matched to your current hour of day.
+              Herbal formulation optimized for metabolic and cognitive transition cycles of the circadian rhythm.
             </p>
 
             <div style={{ display: 'flex', gap: '4px', marginBottom: '1rem', background: 'var(--bg-surface-hover)', padding: '4px', borderRadius: '8px' }}>
@@ -976,21 +995,22 @@ const DietRecommendations = () => {
                     resetBrewing();
                   }}
                   style={{
-                    flex: 1, padding: '5px', borderRadius: '6px', border: 'none', fontSize: '0.72rem', cursor: 'pointer',
-                    background: activeTeaTime === time ? 'var(--border)' : 'transparent',
-                    color: activeTeaTime === time ? 'var(--primary)' : 'var(--text-secondary)',
-                    fontWeight: activeTeaTime === time ? 'bold' : 'normal'
+                    flex: 1, padding: '6px', borderRadius: '6px', border: 'none', fontSize: '0.72rem', cursor: 'pointer',
+                    background: activeTeaTime === time ? 'var(--bg-surface)' : 'transparent',
+                    color: activeTeaTime === time ? 'var(--text-main)' : 'var(--text-secondary)',
+                    fontWeight: activeTeaTime === time ? '600' : 'normal',
+                    transition: 'all 0.15s'
                   }}
                 >
-                  {teaRecipes[time].emoji} {time}
+                  {time}
                 </button>
               ))}
             </div>
 
-            <div style={{ padding: '1rem', background: 'var(--bg-surface-hover)', borderRadius: '10px', borderLeft: '3px solid var(--primary)', marginBottom: '1.2rem' }}>
+            <div style={{ padding: '1rem', background: 'var(--bg-surface-hover)', borderRadius: '10px', border: '1px solid var(--border)', borderLeft: '3px solid var(--text-secondary)', marginBottom: '1.2rem' }}>
               <h4 style={{ color: 'var(--text-main)', fontSize: '0.9rem', marginBottom: '4px' }}>{teaRecipes[activeTeaTime].title}</h4>
-              <p style={{ fontSize: '0.72rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px', fontWeight: 'bold' }}>
-                🌟 {teaRecipes[activeTeaTime].benefit}
+              <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px', fontWeight: 'bold' }}>
+                Core Action: {teaRecipes[activeTeaTime].benefit}
               </p>
               <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
                 {teaRecipes[activeTeaTime].desc}
@@ -998,52 +1018,69 @@ const DietRecommendations = () => {
             </div>
 
             {/* Steeping Timer */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'var(--bg-surface-hover)', padding: '1.2rem 1rem', borderRadius: '10px', border: '1px solid var(--border)', width: '100%' }}>
               
-              <div style={{ position: 'relative', width: '50px', height: '40px', marginBottom: '8px', display: 'flex', justifyContent: 'center' }}>
-                {isBrewing && (
-                  <div style={{ position: 'absolute', top: '-15px', display: 'flex', gap: '5px', animation: 'fadeIn 1s infinite alternate' }}>
-                    <span style={{ width: '2px', height: '12px', background: 'var(--primary)', borderRadius: '1px', display: 'inline-block', opacity: 0.7, transform: 'skewX(-10deg)' }}></span>
-                    <span style={{ width: '2px', height: '12px', background: 'var(--primary)', borderRadius: '1px', display: 'inline-block', opacity: 0.7, transform: 'skewX(10deg)' }}></span>
-                    <span style={{ width: '2px', height: '12px', background: 'var(--primary)', borderRadius: '1px', display: 'inline-block', opacity: 0.7, transform: 'skewX(-5deg)' }}></span>
-                  </div>
-                )}
-                <div style={{ width: '36px', height: '26px', border: '3px solid var(--text-main)', borderTop: 'none', borderBottomLeftRadius: '12px', borderBottomRightRadius: '12px', marginTop: '5px', position: 'relative' }}>
-                  <div style={{ width: '10px', height: '12px', border: '3px solid var(--text-main)', borderLeft: 'none', borderRadius: '0 8px 8px 0', position: 'absolute', right: '-12px', top: '2px' }}></div>
-                  <div style={{ 
-                    position: 'absolute', bottom: '2px', left: '2px', right: '2px', 
-                    height: isBrewing ? '16px' : '6px', 
-                    background: 'var(--primary-dim)', 
-                    borderRadius: '0 0 8px 8px',
-                    transition: 'height 2s ease'
-                  }}></div>
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px' }}>
+                <span style={{ 
+                  width: '8px', 
+                  height: '8px', 
+                  borderRadius: '50%', 
+                  background: isBrewing ? '#4ade80' : 'var(--text-muted)', 
+                  display: 'inline-block', 
+                  marginRight: '8px', 
+                  boxShadow: isBrewing ? '0 0 8px #4ade80' : 'none',
+                  animation: isBrewing ? 'fadeIn 1s infinite alternate' : 'none'
+                }}></span>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '600' }}>
+                  {isBrewing ? "Extraction In Progress" : "Brewing System Idle"}
+                </span>
               </div>
 
-              <span style={{ fontSize: '1.4rem', fontWeight: 'bold', fontFamily: 'monospace', color: isBrewing ? 'var(--primary)' : 'var(--text-main)', letterSpacing: '1px' }}>
+              <span style={{ fontSize: '2.4rem', fontWeight: '200', fontFamily: 'monospace', color: 'var(--text-main)', letterSpacing: '2px', lineHeight: '1' }}>
                 {formatTime(brewingTimeLeft)}
               </span>
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '1rem', marginTop: '2px' }}>
-                {isBrewing ? "Steeping ingredients in hot water..." : brewingTimeLeft === 0 ? "Elixir Steeping Complete!" : "Recommended Steeping: 3 Minutes"}
-              </span>
+              
+              <div style={{ width: '100%', height: '3px', background: 'var(--bg-surface)', borderRadius: '1.5px', overflow: 'hidden', marginTop: '10px', marginBottom: '10px' }}>
+                <div 
+                  style={{ 
+                    width: `${((180 - brewingTimeLeft) / 180) * 100}%`, 
+                    height: '100%', 
+                    background: '#38bdf8', 
+                    transition: 'width 1s linear' 
+                  }}
+                ></div>
+              </div>
 
-              <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+              <div style={{ display: 'flex', gap: '8px', width: '100%', marginTop: '6px' }}>
                 <button 
                   onClick={toggleBrewing}
-                  className="btn"
+                  className="btn btn-secondary"
                   style={{ 
-                    flex: 2, justifyContent: 'center', padding: '8px', fontSize: '0.78rem',
-                    background: isBrewing ? 'var(--warning)' : 'var(--primary)',
-                    color: '#000'
+                    flex: 2, 
+                    justifyContent: 'center', 
+                    padding: '10px', 
+                    fontSize: '0.78rem',
+                    background: isBrewing ? 'transparent' : 'var(--border)',
+                    borderColor: 'var(--border)',
+                    color: 'var(--text-main)',
+                    fontWeight: '600'
                   }}
                   disabled={brewingTimeLeft === 0}
                 >
-                  {isBrewing ? "Pause Steeping ⏸️" : "Start Steeping ▶️"}
+                  {isBrewing ? "Pause Extraction" : "Initiate Extraction"}
                 </button>
                 <button 
                   onClick={resetBrewing}
-                  className="btn btn-secondary"
-                  style={{ flex: 1, justifyContent: 'center', padding: '8px', fontSize: '0.78rem' }}
+                  className="btn"
+                  style={{ 
+                    flex: 1, 
+                    justifyContent: 'center', 
+                    padding: '10px', 
+                    fontSize: '0.78rem',
+                    background: 'transparent',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text-secondary)'
+                  }}
                 >
                   Reset
                 </button>
@@ -1054,15 +1091,15 @@ const DietRecommendations = () => {
           {/* GROCERY CHECKLIST */}
           <div className="glass-panel" style={{ padding: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2 style={{ fontSize: '1.15rem' }}>🛒 Shopping List</h2>
+              <h2 style={{ fontSize: '1.15rem' }}>Ingredient Procurement</h2>
               <button 
                 onClick={() => setIsGroceryOpen(!isGroceryOpen)}
-                style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 'bold' }}
+                style={{ background: 'none', border: 'none', color: 'var(--text-main)', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 'bold' }}
               >
                 {isGroceryOpen ? 'Hide' : 'Expand'}
               </button>
             </div>
-            <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: isGroceryOpen ? '1rem' : '0' }}>Curated weekly ingredients based on {preference} plan</p>
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: isGroceryOpen ? '1rem' : '0' }}>Curated weekly ingredients based on active {preference} profile</p>
             
             {isGroceryOpen && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '0.5rem', animation: 'fadeIn 0.2s' }}>
@@ -1088,7 +1125,7 @@ const DietRecommendations = () => {
                         type="checkbox" 
                         checked={!!checkedGroceryItems[item]} 
                         onChange={() => toggleGroceryItem(item)}
-                        style={{ cursor: 'pointer', accentColor: 'var(--primary)' }}
+                        style={{ cursor: 'pointer', accentColor: 'var(--text-main)' }}
                       />
                       {item}
                     </label>
@@ -1099,7 +1136,7 @@ const DietRecommendations = () => {
                   style={{ width: '100%', padding: '8px', fontSize: '0.78rem', marginTop: '8px' }}
                   className="btn btn-secondary"
                 >
-                  📋 Copy List to Clipboard
+                  Copy List to Clipboard
                 </button>
               </div>
             )}
