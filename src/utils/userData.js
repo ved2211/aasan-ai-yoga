@@ -70,3 +70,46 @@ export const generateChartData = (sessions) => {
     exertion: d.count > 0 ? Math.min(100, 30 + (d.duration / 60) * 5) : 0
   }));
 };
+
+// ─── FIRESTORE: Save Ayurvedic quiz answers & dominant dosha ──────────────────
+export const saveQuizData = async (answers, dominantDosha) => {
+  if (!auth.currentUser) return;
+
+  try {
+    await addDoc(collection(db, 'ayurveda_quizzes'), {
+      uid: auth.currentUser.uid,
+      answers: answers, // Array of { questionId, answerValue }
+      dominantDosha: dominantDosha,
+      date: new Date().toISOString(),
+      timestamp: Date.now()
+    });
+  } catch (err) {
+    console.error('Error saving Ayurvedic quiz to Firestore:', err);
+  }
+};
+
+// ─── FIRESTORE: Real-time listener for current user's quizzes ─────────────────
+export const subscribeToUserQuizzes = (callback) => {
+  if (!auth.currentUser) {
+    callback([]);
+    return () => {};
+  }
+
+  const q = query(
+    collection(db, 'ayurveda_quizzes'),
+    where('uid', '==', auth.currentUser.uid)
+  );
+
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    const data = snapshot.docs
+      .map(doc => doc.data())
+      .sort((a, b) => b.timestamp - a.timestamp);
+    callback(data);
+  }, (err) => {
+    console.error('Firestore quizzes listener error:', err);
+    callback([]);
+  });
+
+  return unsubscribe;
+};
+

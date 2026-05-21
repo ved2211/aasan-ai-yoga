@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { auth } from '../firebase';
-import { subscribeToUserSessions } from '../utils/userData';
+import { subscribeToUserSessions, saveQuizData, subscribeToUserQuizzes } from '../utils/userData';
 import { toast } from 'react-hot-toast';
 
 // ─── COMPREHENSIVE DIET PLANS (4-Meal Structure + Macros + Grocery Lists) ─────
@@ -327,6 +327,7 @@ const DietRecommendations = () => {
   const [quizStep, setQuizStep] = useState(0); // 0: Start, 1: Q1, 2: Q2, 3: Q3, 4: Result
   const [activeQuestions, setActiveQuestions] = useState([]);
   const [quizAnswers, setQuizAnswers] = useState([]);
+  const [quizzes, setQuizzes] = useState([]);
   const [dominantDosha, setDominantDosha] = useState(() => {
     return localStorage.getItem('user_dominant_dosha') || null;
   });
@@ -371,16 +372,33 @@ const DietRecommendations = () => {
     };
   }, [isBrewing, brewingTimeLeft]);
 
-  // Subscribe to user sessions
+  // Subscribe to user sessions and quizzes in real-time
   useEffect(() => {
-    let firestoreUnsub = () => {};
+    let unsubscribeSessions = () => {};
+    let unsubscribeQuizzes = () => {};
+    
     const authUnsub = auth.onAuthStateChanged((currentUser) => {
-      firestoreUnsub();
+      unsubscribeSessions();
+      unsubscribeQuizzes();
       if (currentUser) {
-        firestoreUnsub = subscribeToUserSessions(setSessions);
+        unsubscribeSessions = subscribeToUserSessions(setSessions);
+        unsubscribeQuizzes = subscribeToUserQuizzes((data) => {
+          setQuizzes(data);
+          if (data.length > 0) {
+            setDominantDosha(data[0].dominantDosha);
+          }
+        });
+      } else {
+        setSessions([]);
+        setQuizzes([]);
       }
     });
-    return () => { authUnsub(); firestoreUnsub(); };
+    
+    return () => {
+      authUnsub();
+      unsubscribeSessions();
+      unsubscribeQuizzes();
+    };
   }, []);
 
   // Filter to today's sessions only
@@ -434,17 +452,42 @@ const DietRecommendations = () => {
       .catch(() => toast.error('Failed to copy. Please try again.'));
   };
 
-  // Ayurvedic Dosha Quiz Processors with ROTATING/SHUFFLED questions
+  // Ayurvedic Dosha Quiz Processors with SMART ADAPTIVE logic and Firestore storage
   const initializeQuiz = () => {
-    // Pick 3 random, unique questions from the pool of 7
-    const shuffled = [...doshaQuizQuestionsPool].sort(() => 0.5 - Math.random());
-    setActiveQuestions(shuffled.slice(0, 3));
+    let chosenQuestions = [];
+    
+    if (quizzes && quizzes.length > 0) {
+      const prevQuiz = quizzes[0];
+      const prevQuestionIds = prevQuiz.answers ? prevQuiz.answers.map(ans => ans.questionId) : [];
+      
+      // Filter out previously asked question IDs to prioritize unasked parameters
+      const unaskedPool = doshaQuizQuestionsPool.filter(q => !prevQuestionIds.includes(q.id));
+      
+      // Shuffle the unasked pool
+      const shuffledUnasked = [...unaskedPool].sort(() => 0.5 - Math.random());
+      
+      if (shuffledUnasked.length >= 3) {
+        // We have at least 3 unasked questions, pick 3 of them
+        chosenQuestions = shuffledUnasked.slice(0, 3);
+      } else {
+        // Less than 3 unasked questions (e.g. repeated attempts), pick all remaining unasked,
+        // and fill the rest from the previously asked ones (shuffled)
+        const askedPool = doshaQuizQuestionsPool.filter(q => prevQuestionIds.includes(q.id));
+        const shuffledAsked = [...askedPool].sort(() => 0.5 - Math.random());
+        chosenQuestions = [...shuffledUnasked, ...shuffledAsked.slice(0, 3 - shuffledUnasked.length)];
+      }
+    } else {
+      // No previous quiz exists, pick 3 random questions from the total pool
+      chosenQuestions = [...doshaQuizQuestionsPool].sort(() => 0.5 - Math.random()).slice(0, 3);
+    }
+    
+    setActiveQuestions(chosenQuestions);
     setQuizAnswers([]);
     setQuizStep(1);
   };
 
-  const handleQuizAnswer = (value) => {
-    const nextAnswers = [...quizAnswers, value];
+  const handleQuizAnswer = (value, questionId) => {
+    const nextAnswers = [...quizAnswers, { questionId, answerValue: value }];
     setQuizAnswers(nextAnswers);
     
     if (quizStep < 3) {
@@ -452,7 +495,9 @@ const DietRecommendations = () => {
     } else {
       // Calculate dominant dosha from dynamic answers
       const counts = { vata: 0, pitta: 0, kapha: 0 };
-      nextAnswers.forEach(ans => counts[ans]++);
+      nextAnswers.forEach(ans => {
+        counts[ans.answerValue]++;
+      });
       
       let dominant = 'vata';
       if (counts.pitta > counts[dominant]) dominant = 'pitta';
@@ -460,6 +505,10 @@ const DietRecommendations = () => {
 
       setDominantDosha(dominant);
       localStorage.setItem('user_dominant_dosha', dominant);
+      
+      // Store in Firebase Firestore collection 'ayurveda_quizzes'
+      saveQuizData(nextAnswers, dominant);
+      
       setQuizStep(4);
       toast.success(`Complete! Your dominant Ayurvedic Dosha profile is: ${doshaProfiles[dominant].name}`, {
         icon: '🕉️',
@@ -709,12 +758,27 @@ const DietRecommendations = () => {
                   <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1.2rem', maxWidth: '420px', margin: '0 auto 1.2rem auto' }}>
                     Take our quick, dynamic diagnostic assessment to calculate your dominant physical constitution (**Vata**, **Pitta**, or **Kapha**).
                   </p>
+                  
+                  {quizzes && quizzes.length > 0 && (
+                    <div style={{ margin: '0 auto 1.5rem auto', maxWidth: '520px', padding: '12px 16px', background: 'rgba(212, 255, 79, 0.04)', borderRadius: '10px', border: '1px solid rgba(212, 255, 79, 0.15)', textAlign: 'left', fontSize: '0.8rem', lineHeight: '1.4' }}>
+                      <span style={{ display: 'inline-block', background: 'var(--primary)', color: '#000', padding: '2px 6px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', marginBottom: '6px' }}>
+                        ✨ ADAPTIVE AI MODE ACTIVE
+                      </span>
+                      <p style={{ color: 'var(--text-main)', marginBottom: '4px' }}>
+                        Detected a previous assessment from {new Date(quizzes[0].date).toLocaleDateString()} ({new Date(quizzes[0].date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}).
+                      </p>
+                      <p style={{ color: 'var(--text-muted)' }}>
+                        To build a highly accurate holistic health profile, your next quiz attempt will automatically filter out previously asked questions and prioritize unanalyzed parameters (e.g. sleep cycles, body build, skin characteristics, or memory recall).
+                      </p>
+                    </div>
+                  )}
+
                   <button className="btn" onClick={initializeQuiz}>
-                    {dominantDosha ? "Retake Dynamic Quiz 🔄" : "Start Shuffled Quiz 📿"}
+                    {dominantDosha ? "Retake Adaptive Quiz 🔄" : "Start Shuffled Quiz 📿"}
                   </button>
                   {dominantDosha && (
                     <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '8px' }}>
-                      Currently stored profile: <strong style={{ color: doshaProfiles[dominantDosha].color }}>{doshaProfiles[dominantDosha].name}</strong>
+                      Currently active profile: <strong style={{ color: doshaProfiles[dominantDosha].color }}>{doshaProfiles[dominantDosha].name}</strong>
                     </p>
                   )}
                 </div>
@@ -742,7 +806,7 @@ const DietRecommendations = () => {
                       <button
                         key={i}
                         className="btn btn-secondary"
-                        onClick={() => handleQuizAnswer(opt.value)}
+                        onClick={() => handleQuizAnswer(opt.value, activeQuestions[quizStep - 1].id)}
                         style={{
                           width: '100%',
                           textAlign: 'left',
