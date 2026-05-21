@@ -7,18 +7,18 @@ import { toast } from 'react-hot-toast';
 import './YogaSession.css';
 
 const asanas = [
-  { id: 'tadasana', name: 'Tadasana', english: 'Mountain Pose', description: 'Improves posture and balance.', imgUrl: '/tadasana.png' },
-  { id: 'vrikshasana', name: 'Vrikshasana', english: 'Tree Pose', description: 'Increases concentration and leg strength.', imgUrl: '/vrikshasana.png' },
-  { id: 'bhujangasana', name: 'Bhujangasana', english: 'Cobra Pose', description: 'Strengthens the back and improves flexibility.', imgUrl: '/bhujangasana.png' },
-  { id: 'trikonasana', name: 'Trikonasana', english: 'Triangle Pose', description: 'Stretches the body and improves digestion.', imgUrl: '/trikonasana.png' },
-  { id: 'padmasana', name: 'Padmasana', english: 'Lotus Pose', description: 'Helps in meditation and calming the mind.', imgUrl: '/padmasana.png' },
-  { id: 'vajrasana', name: 'Vajrasana', english: 'Thunderbolt Pose', description: 'Good for digestion after meals.', imgUrl: '/vajrasana.png' },
-  { id: 'adho_mukha_svanasana', name: 'Adho Mukha Svanasana', english: 'Downward Dog', description: 'Strengthens arms and legs.', imgUrl: '/adho_mukha_svanasana.png' },
-  { id: 'paschimottanasana', name: 'Paschimottanasana', english: 'Seated Forward Bend', description: 'Reduces stress and stretches the spine.', imgUrl: '/paschimottanasana.png' },
-  { id: 'setu_bandhasana', name: 'Setu Bandhasana', english: 'Bridge Pose', description: 'Strengthens the back and chest.', imgUrl: '/setu_bandhasana.png' },
-  { id: 'shavasana', name: 'Shavasana', english: 'Corpse Pose', description: 'Provides complete relaxation.', imgUrl: '/shavasana.png' },
-  { id: 'surya_namaskar', name: 'Surya Namaskar', english: 'Sun Salutation', description: 'Full body exercise with multiple poses.', imgUrl: '/surya_namaskar.png' },
-  { id: 'naukasana', name: 'Naukasana', english: 'Boat Pose', description: 'Strengthens abdominal muscles.', imgUrl: '/naukasana.png' }
+  { id: 'tadasana', name: 'Tadasana', english: 'Mountain Pose', description: 'Improves posture and balance.', imgUrl: '/tadasana.png', videoUrl: 'https://www.youtube.com/embed/2HTvZp5rLn4' },
+  { id: 'vrikshasana', name: 'Vrikshasana', english: 'Tree Pose', description: 'Increases concentration and leg strength.', imgUrl: '/vrikshasana.png', videoUrl: 'https://www.youtube.com/embed/0x2gYJee0E4' },
+  { id: 'bhujangasana', name: 'Bhujangasana', english: 'Cobra Pose', description: 'Strengthens the back and improves flexibility.', imgUrl: '/bhujangasana.png', videoUrl: 'https://www.youtube.com/embed/fOdrW7nFtyA' },
+  { id: 'trikonasana', name: 'Trikonasana', english: 'Triangle Pose', description: 'Stretches the body and improves digestion.', imgUrl: '/trikonasana.png', videoUrl: 'https://www.youtube.com/embed/S6gB0QhnTyc' },
+  { id: 'padmasana', name: 'Padmasana', english: 'Lotus Pose', description: 'Helps in meditation and calming the mind.', imgUrl: '/padmasana.png', videoUrl: 'https://www.youtube.com/embed/Fw0vSgEwYJk' },
+  { id: 'vajrasana', name: 'Vajrasana', english: 'Thunderbolt Pose', description: 'Good for digestion after meals.', imgUrl: '/vajrasana.png', videoUrl: 'https://www.youtube.com/embed/a9n_yH9o4vI' },
+  { id: 'adho_mukha_svanasana', name: 'Adho Mukha Svanasana', english: 'Downward Dog', description: 'Strengthens arms and legs.', imgUrl: '/adho_mukha_svanasana.png', videoUrl: 'https://www.youtube.com/embed/EC7RGJ975iM' },
+  { id: 'paschimottanasana', name: 'Paschimottanasana', english: 'Seated Forward Bend', description: 'Reduces stress and stretches the spine.', imgUrl: '/paschimottanasana.png', videoUrl: 'https://www.youtube.com/embed/T8sgVyF4Ux4' },
+  { id: 'setu_bandhasana', name: 'Setu Bandhasana', english: 'Bridge Pose', description: 'Strengthens the back and chest.', imgUrl: '/setu_bandhasana.png', videoUrl: 'https://www.youtube.com/embed/NnL3N7_e0fU' },
+  { id: 'shavasana', name: 'Shavasana', english: 'Corpse Pose', description: 'Provides complete relaxation.', imgUrl: '/shavasana.png', videoUrl: 'https://www.youtube.com/embed/1ZO7V6dM7xQ' },
+  { id: 'surya_namaskar', name: 'Surya Namaskar', english: 'Sun Salutation', description: 'Full body exercise with multiple poses.', imgUrl: '/surya_namaskar.png', videoUrl: 'https://www.youtube.com/embed/hJbK6F292k0' },
+  { id: 'naukasana', name: 'Naukasana', english: 'Boat Pose', description: 'Strengthens abdominal muscles.', imgUrl: '/naukasana.png', videoUrl: 'https://www.youtube.com/embed/g2J03fKxly8' }
 ];
 
 const YogaSession = () => {
@@ -28,6 +28,7 @@ const YogaSession = () => {
   const [feedback, setFeedback] = useState("Initializing AI Camera...");
   const [poseAccuracy, setPoseAccuracy] = useState(0);
   const [selectedAsana, setSelectedAsana] = useState('Tadasana');
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   
   const { isConnected, pressureData, sweatLevel, connectMat, disconnectMat, simulateConnection, error } = useSmartMat();
 
@@ -260,7 +261,15 @@ const YogaSession = () => {
               <img src={currentAsanaDetails.imgUrl} alt={selectedAsana} className="reference-img" />
               <div className="reference-overlay">
                 <h4>{currentAsanaDetails.english}</h4>
-                <p>{currentAsanaDetails.description}</p>
+                <p style={{ marginBottom: currentAsanaDetails.videoUrl ? '10px' : '0' }}>{currentAsanaDetails.description}</p>
+                {currentAsanaDetails.videoUrl && (
+                  <button 
+                    className="btn btn-secondary video-preview-btn" 
+                    onClick={() => setIsVideoModalOpen(true)}
+                  >
+                    📺 View Tutorial Video
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -295,6 +304,21 @@ const YogaSession = () => {
               <span className="icon">{poseAccuracy > 80 ? '✅' : '⚠️'}</span>
               <p>{feedback}</p>
             </div>
+
+            {poseAccuracy > 0 && poseAccuracy < 65 && (
+              <div className="accuracy-alert-card animate-pulse-border">
+                <span className="alert-bulb">💡</span>
+                <div className="alert-content">
+                  <p>Accuracy needs improvement! Watch our curated guide to correct your form.</p>
+                  <button 
+                    className="btn btn-primary alert-action-btn"
+                    onClick={() => setIsVideoModalOpen(true)}
+                  >
+                    ▶ Watch Tutorial Video
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="mat-visualization glass-panel">
@@ -312,6 +336,27 @@ const YogaSession = () => {
           </div>
         </div>
       </div>
+
+      {/* Premium Glassmorphic Video Lightbox */}
+      {isVideoModalOpen && currentAsanaDetails.videoUrl && (
+        <div className="video-modal-overlay" onClick={() => setIsVideoModalOpen(false)}>
+          <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="video-modal-close" onClick={() => setIsVideoModalOpen(false)}>×</button>
+            <h3 className="video-modal-title">🧘‍♂️ {selectedAsana} ({currentAsanaDetails.english}) Tutorial</h3>
+            <div className="video-iframe-container">
+              <iframe
+                src={`${currentAsanaDetails.videoUrl}?autoplay=1&rel=0`}
+                title={`${selectedAsana} Tutorial`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className="video-modal-tips">
+              <strong>💡 Posture Alignment Tip:</strong> Focus on breathing slowly, keeping your core engaged, and aligning your joints according to the visual guides. Adjust your position dynamically to see your score rise!
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
