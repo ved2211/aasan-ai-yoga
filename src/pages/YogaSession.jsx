@@ -7,18 +7,18 @@ import { toast } from 'react-hot-toast';
 import './YogaSession.css';
 
 const asanas = [
-  { id: 'tadasana', name: 'Tadasana', english: 'Mountain Pose', description: 'Improves posture and balance.', imgUrl: '/tadasana.png', videoUrl: 'https://www.youtube.com/embed/elBp2FpAOOI' },
-  { id: 'vrikshasana', name: 'Vrikshasana', english: 'Tree Pose', description: 'Increases concentration and leg strength.', imgUrl: '/vrikshasana.png', videoUrl: 'https://www.youtube.com/embed/kYJ_fB9T1Gk' },
-  { id: 'bhujangasana', name: 'Bhujangasana', english: 'Cobra Pose', description: 'Strengthens the back and improves flexibility.', imgUrl: '/bhujangasana.png', videoUrl: 'https://www.youtube.com/embed/o0v42r9Zf54' },
-  { id: 'trikonasana', name: 'Trikonasana', english: 'Triangle Pose', description: 'Stretches the body and improves digestion.', imgUrl: '/trikonasana.png', videoUrl: 'https://www.youtube.com/embed/KaTv00w1hqk' },
-  { id: 'padmasana', name: 'Padmasana', english: 'Lotus Pose', description: 'Helps in meditation and calming the mind.', imgUrl: '/padmasana.png', videoUrl: 'https://www.youtube.com/embed/wQ2YgC7uDls' },
-  { id: 'vajrasana', name: 'Vajrasana', english: 'Thunderbolt Pose', description: 'Good for digestion after meals.', imgUrl: '/vajrasana.png', videoUrl: 'https://www.youtube.com/embed/7h7G7b35f2I' },
-  { id: 'adho_mukha_svanasana', name: 'Adho Mukha Svanasana', english: 'Downward Dog', description: 'Strengthens arms and legs.', imgUrl: '/adho_mukha_svanasana.png', videoUrl: 'https://www.youtube.com/embed/cv7pwN-8VpY' },
-  { id: 'paschimottanasana', name: 'Paschimottanasana', english: 'Seated Forward Bend', description: 'Reduces stress and stretches the spine.', imgUrl: '/paschimottanasana.png', videoUrl: 'https://www.youtube.com/embed/P5R2cQ6d3a4' },
-  { id: 'setu_bandhasana', name: 'Setu Bandhasana', english: 'Bridge Pose', description: 'Strengthens the back and chest.', imgUrl: '/setu_bandhasana.png', videoUrl: 'https://www.youtube.com/embed/RDfLCMl1P7k' },
-  { id: 'shavasana', name: 'Shavasana', english: 'Corpse Pose', description: 'Provides complete relaxation.', imgUrl: '/shavasana.png', videoUrl: 'https://www.youtube.com/embed/v7uL59C20p8' },
-  { id: 'surya_namaskar', name: 'Surya Namaskar', english: 'Sun Salutation', description: 'Full body exercise with multiple poses.', imgUrl: '/surya_namaskar.png', videoUrl: 'https://www.youtube.com/embed/U2lZ5B574Fk' },
-  { id: 'naukasana', name: 'Naukasana', english: 'Boat Pose', description: 'Strengthens abdominal muscles.', imgUrl: '/naukasana.png', videoUrl: 'https://www.youtube.com/embed/g2J03fKxly8' }
+  { id: 'tadasana', name: 'Tadasana', english: 'Mountain Pose', description: 'Improves posture and balance.', imgUrl: '/tadasana.png', videoUrl: 'https://www.youtube.com/embed/gXkqTiW9LCw' },
+  { id: 'vrikshasana', name: 'Vrikshasana', english: 'Tree Pose', description: 'Increases concentration and leg strength.', imgUrl: '/vrikshasana.png', videoUrl: 'https://www.youtube.com/embed/xWGT54sGSLc' },
+  { id: 'bhujangasana', name: 'Bhujangasana', english: 'Cobra Pose', description: 'Strengthens the back and improves flexibility.', imgUrl: '/bhujangasana.png', videoUrl: 'https://www.youtube.com/embed/n6jrC6WeF84' },
+  { id: 'trikonasana', name: 'Trikonasana', english: 'Triangle Pose', description: 'Stretches the body and improves digestion.', imgUrl: '/trikonasana.png', videoUrl: 'https://www.youtube.com/embed/upFYlxZHif0' },
+  { id: 'padmasana', name: 'Padmasana', english: 'Lotus Pose', description: 'Helps in meditation and calming the mind.', imgUrl: '/padmasana.png', videoUrl: 'https://www.youtube.com/embed/kYV30Rz349c' },
+  { id: 'vajrasana', name: 'Vajrasana', english: 'Thunderbolt Pose', description: 'Good for digestion after meals.', imgUrl: '/vajrasana.png', videoUrl: 'https://www.youtube.com/embed/8IeA4lgLT5U' },
+  { id: 'adho_mukha_svanasana', name: 'Adho Mukha Svanasana', english: 'Downward Dog', description: 'Strengthens arms and legs.', imgUrl: '/adho_mukha_svanasana.png', videoUrl: 'https://www.youtube.com/embed/WfgWFTpPnlU' },
+  { id: 'paschimottanasana', name: 'Paschimottanasana', english: 'Seated Forward Bend', description: 'Reduces stress and stretches the spine.', imgUrl: '/paschimottanasana.png', videoUrl: 'https://www.youtube.com/embed/l4ltpa05qls' },
+  { id: 'setu_bandhasana', name: 'Setu Bandhasana', english: 'Bridge Pose', description: 'Strengthens the back and chest.', imgUrl: '/setu_bandhasana.png', videoUrl: 'https://www.youtube.com/embed/H4L0B9Z-o0Y' },
+  { id: 'shavasana', name: 'Shavasana', english: 'Corpse Pose', description: 'Provides complete relaxation.', imgUrl: '/shavasana.png', videoUrl: 'https://www.youtube.com/embed/MfYRSxAVBx4' },
+  { id: 'surya_namaskar', name: 'Surya Namaskar', english: 'Sun Salutation', description: 'Full body exercise with multiple poses.', imgUrl: '/surya_namaskar.png', videoUrl: 'https://www.youtube.com/embed/7uV87K3yGjU' },
+  { id: 'naukasana', name: 'Naukasana', english: 'Boat Pose', description: 'Strengthens abdominal muscles.', imgUrl: '/naukasana.png', videoUrl: 'https://www.youtube.com/embed/spx5jVgWH2E' }
 ];
 
 const YogaSession = () => {
