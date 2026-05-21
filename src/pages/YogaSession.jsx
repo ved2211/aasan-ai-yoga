@@ -9,18 +9,18 @@ import ParticleBackground from '../components/ParticleBackground';
 import './YogaSession.css';
 
 const asanas = [
-  { id: 'tadasana', name: 'Tadasana', english: 'Mountain Pose', description: 'Improves posture and balance.', imgUrl: '/tadasana.png', videoUrl: 'https://www.youtube.com/embed/gXkqTiW9LCw' },
-  { id: 'vrikshasana', name: 'Vrikshasana', english: 'Tree Pose', description: 'Increases concentration and leg strength.', imgUrl: '/vrikshasana.png', videoUrl: 'https://www.youtube.com/embed/xWGT54sGSLc' },
-  { id: 'bhujangasana', name: 'Bhujangasana', english: 'Cobra Pose', description: 'Strengthens the back and improves flexibility.', imgUrl: '/bhujangasana.png', videoUrl: 'https://www.youtube.com/embed/n6jrC6WeF84' },
-  { id: 'trikonasana', name: 'Trikonasana', english: 'Triangle Pose', description: 'Stretches the body and improves digestion.', imgUrl: '/trikonasana.png', videoUrl: 'https://www.youtube.com/embed/upFYlxZHif0' },
-  { id: 'padmasana', name: 'Padmasana', english: 'Lotus Pose', description: 'Helps in meditation and calming the mind.', imgUrl: '/padmasana.png', videoUrl: 'https://www.youtube.com/embed/kYV30Rz349c' },
-  { id: 'vajrasana', name: 'Vajrasana', english: 'Thunderbolt Pose', description: 'Good for digestion after meals.', imgUrl: '/vajrasana.png', videoUrl: 'https://www.youtube.com/embed/8IeA4lgLT5U' },
-  { id: 'adho_mukha_svanasana', name: 'Adho Mukha Svanasana', english: 'Downward Dog', description: 'Strengthens arms and legs.', imgUrl: '/adho_mukha_svanasana.png', videoUrl: 'https://www.youtube.com/embed/WfgWFTpPnlU' },
-  { id: 'paschimottanasana', name: 'Paschimottanasana', english: 'Seated Forward Bend', description: 'Reduces stress and stretches the spine.', imgUrl: '/paschimottanasana.png', videoUrl: 'https://www.youtube.com/embed/l4ltpa05qls' },
-  { id: 'setu_bandhasana', name: 'Setu Bandhasana', english: 'Bridge Pose', description: 'Strengthens the back and chest.', imgUrl: '/setu_bandhasana.png', videoUrl: 'https://www.youtube.com/embed/H4L0B9Z-o0Y' },
-  { id: 'shavasana', name: 'Shavasana', english: 'Corpse Pose', description: 'Provides complete relaxation.', imgUrl: '/shavasana.png', videoUrl: 'https://www.youtube.com/embed/MfYRSxAVBx4' },
-  { id: 'surya_namaskar', name: 'Surya Namaskar', english: 'Sun Salutation', description: 'Full body exercise with multiple poses.', imgUrl: '/surya_namaskar.png', videoUrl: 'https://www.youtube.com/embed/7uV87K3yGjU' },
-  { id: 'naukasana', name: 'Naukasana', english: 'Boat Pose', description: 'Strengthens abdominal muscles.', imgUrl: '/naukasana.png', videoUrl: 'https://www.youtube.com/embed/spx5jVgWH2E' }
+  { id: 'tadasana', name: 'Tadasana', english: 'Mountain Pose', description: 'Improves posture and balance.', imgUrl: '/tadasana.png', videoUrl: 'https://www.youtube.com/embed/gXkqTiW9LCw', targets: [20, 20, 120, 120] },
+  { id: 'vrikshasana', name: 'Vrikshasana', english: 'Tree Pose', description: 'Increases concentration and leg strength.', imgUrl: '/vrikshasana.png', videoUrl: 'https://www.youtube.com/embed/xWGT54sGSLc', targets: [10, 10, 20, 180] },
+  { id: 'bhujangasana', name: 'Bhujangasana', english: 'Cobra Pose', description: 'Strengthens the back and improves flexibility.', imgUrl: '/bhujangasana.png', videoUrl: 'https://www.youtube.com/embed/n6jrC6WeF84', targets: [100, 100, 70, 70] },
+  { id: 'trikonasana', name: 'Trikonasana', english: 'Triangle Pose', description: 'Stretches the body and improves digestion.', imgUrl: '/trikonasana.png', videoUrl: 'https://www.youtube.com/embed/upFYlxZHif0', targets: [40, 40, 140, 80] },
+  { id: 'padmasana', name: 'Padmasana', english: 'Lotus Pose', description: 'Helps in meditation and calming the mind.', imgUrl: '/padmasana.png', videoUrl: 'https://www.youtube.com/embed/kYV30Rz349c', targets: [15, 15, 130, 130] },
+  { id: 'vajrasana', name: 'Vajrasana', english: 'Thunderbolt Pose', description: 'Good for digestion after meals.', imgUrl: '/vajrasana.png', videoUrl: 'https://www.youtube.com/embed/8IeA4lgLT5U', targets: [10, 10, 140, 140] },
+  { id: 'adho_mukha_svanasana', name: 'Adho Mukha Svanasana', english: 'Downward Dog', description: 'Strengthens arms and legs.', imgUrl: '/adho_mukha_svanasana.png', videoUrl: 'https://www.youtube.com/embed/WfgWFTpPnlU', targets: [110, 110, 110, 110] },
+  { id: 'paschimottanasana', name: 'Paschimottanasana', english: 'Seated Forward Bend', description: 'Reduces stress and stretches the spine.', imgUrl: '/paschimottanasana.png', videoUrl: 'https://www.youtube.com/embed/l4ltpa05qls', targets: [10, 10, 150, 150] },
+  { id: 'setu_bandhasana', name: 'Setu Bandhasana', english: 'Bridge Pose', description: 'Strengthens the back and chest.', imgUrl: '/setu_bandhasana.png', videoUrl: 'https://www.youtube.com/embed/H4L0B9Z-o0Y', targets: [90, 90, 130, 130] },
+  { id: 'shavasana', name: 'Shavasana', english: 'Corpse Pose', description: 'Provides complete relaxation.', imgUrl: '/shavasana.png', videoUrl: 'https://www.youtube.com/embed/MfYRSxAVBx4', targets: [40, 40, 50, 50] },
+  { id: 'surya_namaskar', name: 'Surya Namaskar', english: 'Sun Salutation', description: 'Full body exercise with multiple poses.', imgUrl: '/surya_namaskar.png', videoUrl: 'https://www.youtube.com/embed/7uV87K3yGjU', targets: [80, 80, 100, 100] },
+  { id: 'naukasana', name: 'Naukasana', english: 'Boat Pose', description: 'Strengthens abdominal muscles.', imgUrl: '/naukasana.png', videoUrl: 'https://www.youtube.com/embed/spx5jVgWH2E', targets: [10, 10, 160, 160] }
 ];
 
 const YogaSession = () => {
@@ -191,11 +191,38 @@ const YogaSession = () => {
     };
   }, []);
 
-  const getPressureColor = (val) => {
-    if (val < 50) return 'rgba(59, 130, 246, 0.3)';
-    if (val < 150) return 'rgba(245, 158, 11, 0.6)';
-    return 'rgba(239, 68, 68, 0.8)';
+  const matTargets = currentAsanaDetails.targets || [50, 50, 50, 50];
+
+  const getPressureStatus = (live, target) => {
+    if (target <= 25) {
+      if (live > 40) return { color: 'rgba(239, 68, 68, 0.85)', label: 'Too Heavy!', status: 'high' };
+      return { color: 'rgba(16, 185, 129, 0.85)', label: 'Perfect!', status: 'perfect' };
+    }
+    const diff = live - target;
+    if (diff < -30) {
+      return { color: 'rgba(59, 130, 246, 0.65)', label: 'Press Harder!', status: 'low' };
+    } else if (diff > 30) {
+      return { color: 'rgba(239, 68, 68, 0.85)', label: 'Too Heavy!', status: 'high' };
+    } else {
+      return { color: 'rgba(16, 185, 129, 0.85)', label: 'Perfect!', status: 'perfect' };
+    }
   };
+
+  const calculateMatScore = () => {
+    let totalError = 0;
+    matTargets.forEach((target, idx) => {
+      const live = pressureData[idx] || 0;
+      const error = Math.abs(live - target);
+      totalError += Math.min(error, 100);
+    });
+    return Math.round(100 - (totalError / 4));
+  };
+
+  const matScore = calculateMatScore();
+  const tlStatus = getPressureStatus(pressureData[0], matTargets[0]);
+  const trStatus = getPressureStatus(pressureData[1], matTargets[1]);
+  const blStatus = getPressureStatus(pressureData[2], matTargets[2]);
+  const brStatus = getPressureStatus(pressureData[3], matTargets[3]);
 
   return (
     <>
@@ -346,14 +373,101 @@ const YogaSession = () => {
             )}
           </div>
 
-          <div className="mat-visualization glass-panel">
-            <h2 style={{ fontSize: '1.2rem' }}>Smart Mat Pressure</h2>
+          <div className="mat-visualization glass-panel animate-pulse-border">
+            <div className="balance-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+              <h2 style={{ fontSize: '1.1rem', margin: 0 }}>Smart Mat Guidance</h2>
+              <div className="mat-balance-badge" style={{
+                background: matScore > 80 ? 'rgba(16, 185, 129, 0.15)' : (matScore > 50 ? 'rgba(245, 158, 11, 0.15)' : 'rgba(239, 68, 68, 0.15)'),
+                border: `1px solid ${matScore > 80 ? 'var(--success)' : (matScore > 50 ? 'var(--warning)' : 'var(--danger)')}`,
+                color: matScore > 80 ? 'var(--success)' : (matScore > 50 ? 'var(--warning)' : 'var(--danger)'),
+                padding: '4px 10px',
+                borderRadius: '8px',
+                fontWeight: '700',
+                fontSize: '0.9rem'
+              }}>
+                Match Score: {matScore}%
+              </div>
+            </div>
+            
+            <div className="balance-bar-bg" style={{ width: '100%', height: '6px', background: 'var(--bg-surface)', borderRadius: '3px', overflow: 'hidden', marginBottom: '15px' }}>
+              <div className="balance-bar-fill" style={{ 
+                width: `${matScore}%`, 
+                height: '100%',
+                background: matScore > 80 ? 'var(--success)' : (matScore > 50 ? 'var(--warning)' : 'var(--danger)'),
+                transition: 'width 0.4s ease'
+              }}></div>
+            </div>
+
             {error && <p style={{color: 'var(--warning)', fontSize: '0.85rem', marginBottom: '10px'}}>{error}</p>}
+            
             <div className="mat-grid">
-              <div className="mat-cell" style={{ background: getPressureColor(pressureData[0]) }}></div>
-              <div className="mat-cell" style={{ background: getPressureColor(pressureData[1]) }}></div>
-              <div className="mat-cell" style={{ background: getPressureColor(pressureData[2]) }}></div>
-              <div className="mat-cell" style={{ background: getPressureColor(pressureData[3]) }}></div>
+              {/* Top-Left */}
+              <div className="mat-cell-wrapper">
+                <span className="mat-cell-label">Top Left</span>
+                <div className="mat-cell-visual" style={{ 
+                  boxShadow: tlStatus.status === 'perfect' ? `0 0 10px ${tlStatus.color}` : 'none',
+                  borderColor: tlStatus.status === 'perfect' ? 'var(--success)' : 'var(--border)'
+                }}>
+                  <div className="mat-cell-fill" style={{ height: `${(pressureData[0] / 255) * 100}%`, background: tlStatus.color }}></div>
+                  <div className="mat-cell-target-line" style={{ bottom: `${(matTargets[0] / 255) * 100}%` }}></div>
+                  <div className="mat-cell-inner-text">
+                    <span className="live-val">{pressureData[0]}</span>
+                    <span className="target-val">Goal: {matTargets[0]}</span>
+                  </div>
+                </div>
+                <span className="mat-cell-status" style={{ color: tlStatus.color }}>{tlStatus.label}</span>
+              </div>
+
+              {/* Top-Right */}
+              <div className="mat-cell-wrapper">
+                <span className="mat-cell-label">Top Right</span>
+                <div className="mat-cell-visual" style={{ 
+                  boxShadow: trStatus.status === 'perfect' ? `0 0 10px ${trStatus.color}` : 'none',
+                  borderColor: trStatus.status === 'perfect' ? 'var(--success)' : 'var(--border)'
+                }}>
+                  <div className="mat-cell-fill" style={{ height: `${(pressureData[1] / 255) * 100}%`, background: trStatus.color }}></div>
+                  <div className="mat-cell-target-line" style={{ bottom: `${(matTargets[1] / 255) * 100}%` }}></div>
+                  <div className="mat-cell-inner-text">
+                    <span className="live-val">{pressureData[1]}</span>
+                    <span className="target-val">Goal: {matTargets[1]}</span>
+                  </div>
+                </div>
+                <span className="mat-cell-status" style={{ color: trStatus.color }}>{trStatus.label}</span>
+              </div>
+
+              {/* Bottom-Left */}
+              <div className="mat-cell-wrapper">
+                <span className="mat-cell-label">Bottom Left</span>
+                <div className="mat-cell-visual" style={{ 
+                  boxShadow: blStatus.status === 'perfect' ? `0 0 10px ${blStatus.color}` : 'none',
+                  borderColor: blStatus.status === 'perfect' ? 'var(--success)' : 'var(--border)'
+                }}>
+                  <div className="mat-cell-fill" style={{ height: `${(pressureData[2] / 255) * 100}%`, background: blStatus.color }}></div>
+                  <div className="mat-cell-target-line" style={{ bottom: `${(matTargets[2] / 255) * 100}%` }}></div>
+                  <div className="mat-cell-inner-text">
+                    <span className="live-val">{pressureData[2]}</span>
+                    <span className="target-val">Goal: {matTargets[2]}</span>
+                  </div>
+                </div>
+                <span className="mat-cell-status" style={{ color: blStatus.color }}>{blStatus.label}</span>
+              </div>
+
+              {/* Bottom-Right */}
+              <div className="mat-cell-wrapper">
+                <span className="mat-cell-label">Bottom Right</span>
+                <div className="mat-cell-visual" style={{ 
+                  boxShadow: brStatus.status === 'perfect' ? `0 0 10px ${brStatus.color}` : 'none',
+                  borderColor: brStatus.status === 'perfect' ? 'var(--success)' : 'var(--border)'
+                }}>
+                  <div className="mat-cell-fill" style={{ height: `${(pressureData[3] / 255) * 100}%`, background: brStatus.color }}></div>
+                  <div className="mat-cell-target-line" style={{ bottom: `${(matTargets[3] / 255) * 100}%` }}></div>
+                  <div className="mat-cell-inner-text">
+                    <span className="live-val">{pressureData[3]}</span>
+                    <span className="target-val">Goal: {matTargets[3]}</span>
+                  </div>
+                </div>
+                <span className="mat-cell-status" style={{ color: brStatus.color }}>{brStatus.label}</span>
+              </div>
             </div>
           </div>
         </div>

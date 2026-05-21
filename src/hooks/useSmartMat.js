@@ -45,16 +45,22 @@ export const useSmartMat = () => {
       await characteristic.startNotifications();
       
       characteristic.addEventListener('characteristicvaluechanged', (event) => {
-        // Parse incoming byte array
-        // Assuming ESP32 sends 4 bytes: [PressureTL, PressureTR, PressureBL, PressureBR]
-        // Values from 0-255 representing raw sensor analog readings mapped to 8-bit
         const value = event.target.value;
-        const pTL = value.getUint8(0);
-        const pTR = value.getUint8(1);
-        const pBL = value.getUint8(2);
-        const pBR = value.getUint8(3);
         
-        setPressureData([pTL, pTR, pBL, pBR]);
+        // Debug logging to pinpoint exactly what the browser receives
+        const bytes = [];
+        for (let i = 0; i < value.byteLength; i++) {
+          bytes.push(value.getUint8(i));
+        }
+        console.log(">>> BLE Received Bytes:", bytes);
+        
+        if (value.byteLength >= 4) {
+          const pTL = value.getUint8(0);
+          const pTR = value.getUint8(1);
+          const pBL = value.getUint8(2);
+          const pBR = value.getUint8(3);
+          setPressureData([pTL, pTR, pBL, pBR]);
+        }
       });
 
       setIsConnected(true);
