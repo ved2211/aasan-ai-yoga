@@ -284,6 +284,14 @@ const teaRecipes = {
   }
 };
 
+// ─── TEA BREWING ACCENT COLOR MAPPING ─────────────────────────────────────────
+const teaColors = {
+  Morning: { text: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)', border: 'rgba(245, 158, 11, 0.3)' },
+  Afternoon: { text: '#38bdf8', bg: 'rgba(56, 189, 248, 0.12)', border: 'rgba(56, 189, 248, 0.3)' },
+  Evening: { text: '#f97316', bg: 'rgba(249, 115, 22, 0.12)', border: 'rgba(249, 115, 22, 0.3)' },
+  Night: { text: '#a78bfa', bg: 'rgba(167, 139, 250, 0.12)', border: 'rgba(167, 139, 250, 0.3)' }
+};
+
 // ─── EXERTION CALCULATION LOGIC ─────────────────────────────────────────────
 const getExertionLevel = (todaySessions) => {
   if (todaySessions.length === 0) return 'none';
@@ -553,7 +561,7 @@ const DietRecommendations = () => {
     <div className="container animate-fade-in" style={{ position: 'relative', zIndex: 1, paddingBottom: '4rem' }}>
       <header style={{ marginBottom: '1.5rem' }} className="responsive-header">
         <div>
-          <h1 className="gradient-text">Diet & Holistic <span className="accent">Nutrition</span></h1>
+          <h1 className="gradient-text">Diet & Holistic <span className="accent" style={{ background: 'linear-gradient(135deg, #a78bfa, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Nutrition</span></h1>
           <p className="subtitle" style={{ color: 'var(--text-muted)' }}>
             Clinical nutrition guidance mapped to your physiological exertion metrics and traditional Ayurvedic constitutional science.
           </p>
@@ -564,7 +572,7 @@ const DietRecommendations = () => {
       <div className="glass-panel" style={{ padding: '1.2rem 1.5rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', borderLeft: `4px solid ${exertionInfo.color}` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           {exertionInfo.color !== 'var(--text-muted)' && (
-            <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: exertionInfo.color, display: 'inline-block' }}></span>
+            <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: exertionInfo.color, display: 'inline-block', boxShadow: `0 0 10px ${exertionInfo.color}` }}></span>
           )}
           <div>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '2px' }}>TODAY'S METABOLIC LOAD</p>
@@ -574,25 +582,25 @@ const DietRecommendations = () => {
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>SESSIONS</p>
-            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--text-main)' }}>{todaySessions.length}</p>
+            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: '#6366f1' }}>{todaySessions.length}</p>
           </div>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>DURATION</p>
-            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--text-main)' }}>
+            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: '#a78bfa' }}>
               {todayDuration > 60 ? `${Math.floor(todayDuration/60)}m` : `${todayDuration}s`}
             </p>
           </div>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>AVG ACCURACY</p>
-            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--text-main)' }}>{todayAvgAccuracy}%</p>
+            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: todayAvgAccuracy > 80 ? 'var(--success)' : todayAvgAccuracy > 50 ? 'var(--warning)' : todayAvgAccuracy > 0 ? 'var(--danger)' : 'var(--text-main)' }}>{todayAvgAccuracy}%</p>
           </div>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>CALORIES BURNED</p>
-            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--text-main)' }}>{caloriesBurned} kcal</p>
+            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: '#fb923c' }}>{caloriesBurned} kcal</p>
           </div>
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>REC. DAILY INTAKE</p>
-            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--text-main)' }}>~{baseCalories} kcal</p>
+            <p style={{ fontSize: '1.3rem', fontWeight: '700', color: '#34d399' }}>~{baseCalories} kcal</p>
           </div>
         </div>
       </div>
@@ -613,9 +621,9 @@ const DietRecommendations = () => {
                 <button 
                   onClick={() => setGoal('Vitality')}
                   style={{ 
-                    background: goal === 'Vitality' ? 'var(--bg-surface)' : 'transparent', 
-                    color: goal === 'Vitality' ? 'var(--text-main)' : 'var(--text-secondary)',
-                    border: goal === 'Vitality' ? '1px solid var(--border)' : '1px solid transparent',
+                    background: goal === 'Vitality' ? 'rgba(56, 189, 248, 0.15)' : 'transparent', 
+                    color: goal === 'Vitality' ? '#38bdf8' : 'var(--text-secondary)',
+                    border: goal === 'Vitality' ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid transparent',
                     borderRadius: '6px',
                     padding: '6px 12px',
                     fontSize: '0.78rem',
@@ -629,9 +637,9 @@ const DietRecommendations = () => {
                 <button 
                   onClick={() => setGoal('Recovery')}
                   style={{ 
-                    background: goal === 'Recovery' ? 'var(--bg-surface)' : 'transparent', 
-                    color: goal === 'Recovery' ? 'var(--text-main)' : 'var(--text-secondary)',
-                    border: goal === 'Recovery' ? '1px solid var(--border)' : '1px solid transparent',
+                    background: goal === 'Recovery' ? 'rgba(167, 139, 250, 0.15)' : 'transparent', 
+                    color: goal === 'Recovery' ? '#a78bfa' : 'var(--text-secondary)',
+                    border: goal === 'Recovery' ? '1px solid rgba(167, 139, 250, 0.4)' : '1px solid transparent',
                     borderRadius: '6px',
                     padding: '6px 12px',
                     fontSize: '0.78rem',
@@ -645,9 +653,9 @@ const DietRecommendations = () => {
                 <button 
                   onClick={() => setGoal('Weight')}
                   style={{ 
-                    background: goal === 'Weight' ? 'var(--bg-surface)' : 'transparent', 
-                    color: goal === 'Weight' ? 'var(--text-main)' : 'var(--text-secondary)',
-                    border: goal === 'Weight' ? '1px solid var(--border)' : '1px solid transparent',
+                    background: goal === 'Weight' ? 'rgba(251, 191, 36, 0.15)' : 'transparent', 
+                    color: goal === 'Weight' ? '#fbbf24' : 'var(--text-secondary)',
+                    border: goal === 'Weight' ? '1px solid rgba(251, 191, 36, 0.4)' : '1px solid transparent',
                     borderRadius: '6px',
                     padding: '6px 12px',
                     fontSize: '0.78rem',
@@ -707,49 +715,49 @@ const DietRecommendations = () => {
 
               {/* Meal 1 */}
               <div style={{ display: 'flex', gap: '1.2rem', position: 'relative', zIndex: 2 }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', flexShrink: 0 }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: '#f59e0b', flexShrink: 0, boxShadow: '0 0 10px rgba(245, 158, 11, 0.05)' }}>
                   01
                 </div>
-                <div style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', border: '1px solid var(--border)', width: '100%' }}>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 1 • {plan.pre.title}</span>
+                <div style={{ padding: '1.2rem', background: 'linear-gradient(to right, rgba(245, 158, 11, 0.03), var(--bg-surface-hover))', borderRadius: '12px', border: '1px solid var(--border)', borderLeft: '3px solid #f59e0b', width: '100%', transition: 'all 0.25s' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 1 • {plan.pre.title}</span>
                   <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.05rem', color: 'var(--text-main)' }}>{plan.pre.desc}</h3>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{plan.pre.why}</p>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{plan.pre.why}</p>
                 </div>
               </div>
 
               {/* Meal 2 */}
               <div style={{ display: 'flex', gap: '1.2rem', position: 'relative', zIndex: 2 }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', flexShrink: 0 }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: '#10b981', flexShrink: 0, boxShadow: '0 0 10px rgba(16, 185, 129, 0.05)' }}>
                   02
                 </div>
-                <div style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', border: '1px solid var(--border)', width: '100%' }}>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 2 • {plan.post.title}</span>
+                <div style={{ padding: '1.2rem', background: 'linear-gradient(to right, rgba(16, 185, 129, 0.03), var(--bg-surface-hover))', borderRadius: '12px', border: '1px solid var(--border)', borderLeft: '3px solid #10b981', width: '100%', transition: 'all 0.25s' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: '#10b981', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 2 • {plan.post.title}</span>
                   <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.05rem', color: 'var(--text-main)' }}>{plan.post.desc}</h3>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{plan.post.why}</p>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{plan.post.why}</p>
                 </div>
               </div>
 
               {/* Meal 3 */}
               <div style={{ display: 'flex', gap: '1.2rem', position: 'relative', zIndex: 2 }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', flexShrink: 0 }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: '#38bdf8', flexShrink: 0, boxShadow: '0 0 10px rgba(56, 189, 248, 0.05)' }}>
                   03
                 </div>
-                <div style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', border: '1px solid var(--border)', width: '100%' }}>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 3 • {plan.mid.title}</span>
+                <div style={{ padding: '1.2rem', background: 'linear-gradient(to right, rgba(56, 189, 248, 0.03), var(--bg-surface-hover))', borderRadius: '12px', border: '1px solid var(--border)', borderLeft: '3px solid #38bdf8', width: '100%', transition: 'all 0.25s' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 3 • {plan.mid.title}</span>
                   <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.05rem', color: 'var(--text-main)' }}>{plan.mid.desc}</h3>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{plan.mid.why}</p>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{plan.mid.why}</p>
                 </div>
               </div>
 
               {/* Meal 4 */}
               <div style={{ display: 'flex', gap: '1.2rem', position: 'relative', zIndex: 2 }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', flexShrink: 0 }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', color: '#a78bfa', flexShrink: 0, boxShadow: '0 0 10px rgba(167, 139, 250, 0.05)' }}>
                   04
                 </div>
-                <div style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', border: '1px solid var(--border)', width: '100%' }}>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 4 • {plan.dinner.title}</span>
+                <div style={{ padding: '1.2rem', background: 'linear-gradient(to right, rgba(167, 139, 250, 0.03), var(--bg-surface-hover))', borderRadius: '12px', border: '1px solid var(--border)', borderLeft: '3px solid #a78bfa', width: '100%', transition: 'all 0.25s' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: '#a78bfa', textTransform: 'uppercase', letterSpacing: '1px' }}>Meal 4 • {plan.dinner.title}</span>
                   <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.05rem', color: 'var(--text-main)' }}>{plan.dinner.desc}</h3>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{plan.dinner.why}</p>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{plan.dinner.why}</p>
                 </div>
               </div>
             </div>
@@ -761,13 +769,22 @@ const DietRecommendations = () => {
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Functional nutrients selected to align with your current metabolic workload state.</p>
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }} className="responsive-grid">
-              {superfoods[exertion].map((food, idx) => (
-                <div key={idx} style={{ padding: '1.2rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', height: '100%' }}>
-                  <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{food.benefit}</span>
-                  <h4 style={{ margin: '4px 0 8px 0', fontSize: '0.98rem', fontWeight: '700', color: 'var(--text-main)' }}>{food.name}</h4>
-                  <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: '1.4', marginTop: 'auto' }}>{food.desc}</p>
-                </div>
-              ))}
+              {superfoods[exertion].map((food, idx) => {
+                const borderColors = ['#6366f1', '#06b6d4', '#34d399'];
+                const textAccents = ['#818cf8', '#22d3ee', '#34d399'];
+                const cardBgs = [
+                  'linear-gradient(to bottom, rgba(99, 102, 241, 0.03), var(--bg-surface-hover))',
+                  'linear-gradient(to bottom, rgba(6, 182, 212, 0.03), var(--bg-surface-hover))',
+                  'linear-gradient(to bottom, rgba(52, 211, 153, 0.03), var(--bg-surface-hover))'
+                ];
+                return (
+                  <div key={idx} style={{ padding: '1.2rem', background: cardBgs[idx], borderRadius: '12px', border: '1px solid var(--border)', borderTop: `3px solid ${borderColors[idx]}`, display: 'flex', flexDirection: 'column', height: '100%', transition: 'all 0.3s' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: textAccents[idx], textTransform: 'uppercase', letterSpacing: '0.5px' }}>{food.benefit}</span>
+                    <h4 style={{ margin: '4px 0 8px 0', fontSize: '0.98rem', fontWeight: '700', color: 'var(--text-main)' }}>{food.name}</h4>
+                    <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: '1.4', marginTop: 'auto' }}>{food.desc}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -856,16 +873,25 @@ const DietRecommendations = () => {
 
               {/* Quiz Results Screen */}
               {(quizStep === 4 || (quizStep === 0 && dominantDosha)) && dominantDosha && (
-                <div style={{ background: 'var(--bg-surface-hover)', padding: '1.5rem', borderRadius: '12px', border: `1px solid ${doshaProfiles[dominantDosha].color}`, position: 'relative', marginTop: quizStep === 4 ? '0' : '1rem' }}>
+                <div style={{ 
+                  background: `linear-gradient(135deg, ${doshaProfiles[dominantDosha].color}0D, var(--bg-surface-hover))`, // 0D represents ~5% opacity
+                  padding: '1.5rem', 
+                  borderRadius: '12px', 
+                  border: `1px solid ${doshaProfiles[dominantDosha].color}40`, // 40 represents 25% opacity
+                  boxShadow: `0 8px 32px -8px ${doshaProfiles[dominantDosha].color}1A`, // 1A is 10% opacity
+                  position: 'relative', 
+                  marginTop: quizStep === 4 ? '0' : '1rem',
+                  transition: 'all 0.3s'
+                }}>
                   <span style={{
                     position: 'absolute', right: '15px', top: '15px', fontSize: '0.7rem', fontWeight: 'bold', 
-                    padding: '4px 8px', borderRadius: '20px', background: 'rgba(255,255,255,0.05)',
-                    color: doshaProfiles[dominantDosha].color, border: `1px solid ${doshaProfiles[dominantDosha].color}`
+                    padding: '4px 8px', borderRadius: '20px', background: `${doshaProfiles[dominantDosha].color}1A`,
+                    color: doshaProfiles[dominantDosha].color, border: `1px solid ${doshaProfiles[dominantDosha].color}33`
                   }}>
                     ACTIVE CONSTITUTION
                   </span>
                   
-                  <h3 style={{ fontSize: '1.3rem', color: doshaProfiles[dominantDosha].color, marginBottom: '0.5rem' }}>
+                  <h3 style={{ fontSize: '1.3rem', color: doshaProfiles[dominantDosha].color, marginBottom: '0.5rem', fontWeight: '700' }}>
                     {doshaProfiles[dominantDosha].name}
                   </h3>
                   
@@ -874,19 +900,19 @@ const DietRecommendations = () => {
                     <strong style={{ color: 'var(--text-main)' }}>{doshaProfiles[dominantDosha].focus}</strong>
                   </div>
 
-                  <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: '1.5', marginBottom: '1rem' }}>
+                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: '1.5', marginBottom: '1rem' }}>
                     {doshaProfiles[dominantDosha].desc}
                   </p>
 
-                  <div style={{ padding: '1rem', background: 'var(--bg-surface)', borderRadius: '8px', borderLeft: `3px solid ${doshaProfiles[dominantDosha].color}`, marginBottom: '1rem', fontSize: '0.82rem' }}>
-                    <strong>NUTRITIONAL CALIBRATION:</strong> {doshaProfiles[dominantDosha].advice}
+                  <div style={{ padding: '1rem', background: 'var(--bg-surface)', borderRadius: '8px', borderLeft: `3px solid ${doshaProfiles[dominantDosha].color}`, marginBottom: '1rem', fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                    <strong style={{ color: 'var(--text-main)' }}>NUTRITIONAL CALIBRATION:</strong> {doshaProfiles[dominantDosha].advice}
                   </div>
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border)', paddingTop: '1rem', flexWrap: 'wrap', gap: '10px' }}>
-                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                    <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
                       Herbal Protocol: <strong style={{ color: 'var(--text-main)' }}>{doshaProfiles[dominantDosha].ally}</strong>
                     </span>
-                    <button className="btn btn-secondary" onClick={resetQuiz} style={{ padding: '6px 12px', fontSize: '0.75rem' }}>
+                    <button className="btn btn-secondary" onClick={resetQuiz} style={{ padding: '6px 12px', fontSize: '0.75rem', border: '1px solid var(--border)' }}>
                       Re-evaluate Constitution
                     </button>
                   </div>
@@ -909,8 +935,10 @@ const DietRecommendations = () => {
 
             <div style={{
               position: 'relative', width: '140px', height: '140px', borderRadius: '50%',
-              background: `conic-gradient(#38bdf8 ${(waterGlasses / plan.water) * 360}deg, var(--bg-surface-hover) 0deg)`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem'
+              background: `conic-gradient(${waterGlasses >= plan.water ? '#34d399' : '#38bdf8'} ${(waterGlasses / plan.water) * 360}deg, var(--bg-surface-hover) 0deg)`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem',
+              boxShadow: waterGlasses > 0 ? `0 0 20px ${waterGlasses >= plan.water ? 'rgba(52, 211, 153, 0.15)' : 'rgba(56, 189, 248, 0.15)'}` : 'none',
+              transition: 'all 0.3s'
             }}>
               <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'var(--bg-surface)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <span style={{ fontSize: '2.2rem', fontWeight: '700', color: 'var(--text-main)', lineHeight: '1' }}>{waterGlasses}</span>
@@ -918,20 +946,34 @@ const DietRecommendations = () => {
               </div>
             </div>
 
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem', fontWeight: '500' }}>
+            <p style={{ fontSize: '0.85rem', color: waterGlasses >= plan.water ? '#34d399' : 'var(--text-secondary)', marginBottom: '1.5rem', fontWeight: '600', transition: 'all 0.3s' }}>
               {waterGlasses >= plan.water ? 'Target Intake Achieved' : `${plan.water - waterGlasses} units remaining to meet target`}
             </p>
 
             <button 
-              className="btn btn-secondary" 
               onClick={() => setWaterGlasses(prev => prev < plan.water ? prev + 1 : prev)}
-              style={{ width: '100%', justifyContent: 'center', padding: '10px 16px', fontSize: '0.85rem' }} 
+              style={{ 
+                width: '100%', 
+                justifyContent: 'center', 
+                padding: '10px 16px', 
+                fontSize: '0.85rem',
+                background: waterGlasses >= plan.water ? 'rgba(52, 211, 153, 0.1)' : 'rgba(56, 189, 248, 0.15)',
+                color: waterGlasses >= plan.water ? '#34d399' : '#38bdf8',
+                border: waterGlasses >= plan.water ? '1px solid rgba(52, 211, 153, 0.3)' : '1px solid rgba(56, 189, 248, 0.3)',
+                borderRadius: '8px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
+              }} 
               disabled={waterGlasses >= plan.water}
             >
-              Add Intake Unit
+              {waterGlasses >= plan.water ? 'Target Reached' : 'Add Intake Unit'}
             </button>
-            <button className="btn" onClick={() => setWaterGlasses(0)}
-              style={{ width: '100%', justifyContent: 'center', marginTop: '0.8rem', padding: '10px 16px', fontSize: '0.85rem', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
+            <button className="btn btn-secondary" onClick={() => setWaterGlasses(0)}
+              style={{ width: '100%', justifyContent: 'center', marginTop: '0.8rem', padding: '10px 16px', fontSize: '0.85rem', border: '1px solid var(--border)' }}>
               Reset Metrics
             </button>
 
@@ -990,32 +1032,35 @@ const DietRecommendations = () => {
             </p>
 
             <div style={{ display: 'flex', gap: '4px', marginBottom: '1rem', background: 'var(--bg-surface-hover)', padding: '4px', borderRadius: '8px' }}>
-              {Object.keys(teaRecipes).map(time => (
-                <button
-                  key={time}
-                  onClick={() => {
-                    setActiveTeaTime(time);
-                    resetBrewing();
-                  }}
-                  style={{
-                    flex: 1, padding: '6px', borderRadius: '6px', border: 'none', fontSize: '0.72rem', cursor: 'pointer',
-                    background: activeTeaTime === time ? 'var(--bg-surface)' : 'transparent',
-                    color: activeTeaTime === time ? 'var(--text-main)' : 'var(--text-secondary)',
-                    fontWeight: activeTeaTime === time ? '600' : 'normal',
-                    transition: 'all 0.15s'
-                  }}
-                >
-                  {time}
-                </button>
-              ))}
+              {Object.keys(teaRecipes).map(time => {
+                const active = activeTeaTime === time;
+                return (
+                  <button
+                    key={time}
+                    onClick={() => {
+                      setActiveTeaTime(time);
+                      resetBrewing();
+                    }}
+                    style={{
+                      flex: 1, padding: '6px', borderRadius: '6px', border: active ? `1px solid ${teaColors[time].border}` : '1px solid transparent', fontSize: '0.72rem', cursor: 'pointer',
+                      background: active ? teaColors[time].bg : 'transparent',
+                      color: active ? teaColors[time].text : 'var(--text-secondary)',
+                      fontWeight: active ? '600' : 'normal',
+                      transition: 'all 0.15s'
+                    }}
+                  >
+                    {time}
+                  </button>
+                );
+              })}
             </div>
 
-            <div style={{ padding: '1rem', background: 'var(--bg-surface-hover)', borderRadius: '10px', border: '1px solid var(--border)', borderLeft: '3px solid var(--text-secondary)', marginBottom: '1.2rem' }}>
+            <div style={{ padding: '1rem', background: 'var(--bg-surface-hover)', borderRadius: '10px', border: '1px solid var(--border)', borderLeft: `3px solid ${teaColors[activeTeaTime].text}`, marginBottom: '1.2rem', transition: 'all 0.3s' }}>
               <h4 style={{ color: 'var(--text-main)', fontSize: '0.9rem', marginBottom: '4px' }}>{teaRecipes[activeTeaTime].title}</h4>
-              <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px', fontWeight: 'bold' }}>
+              <p style={{ fontSize: '0.72rem', color: teaColors[activeTeaTime].text, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px', fontWeight: 'bold' }}>
                 Core Action: {teaRecipes[activeTeaTime].benefit}
               </p>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+              <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
                 {teaRecipes[activeTeaTime].desc}
               </p>
             </div>
@@ -1034,7 +1079,7 @@ const DietRecommendations = () => {
                   boxShadow: isBrewing ? '0 0 8px #4ade80' : 'none',
                   animation: isBrewing ? 'fadeIn 1s infinite alternate' : 'none'
                 }}></span>
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '600' }}>
+                <span style={{ fontSize: '0.72rem', color: isBrewing ? '#4ade80' : 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '600' }}>
                   {isBrewing ? "Extraction In Progress" : "Brewing System Idle"}
                 </span>
               </div>
@@ -1048,8 +1093,9 @@ const DietRecommendations = () => {
                   style={{ 
                     width: `${((180 - brewingTimeLeft) / 180) * 100}%`, 
                     height: '100%', 
-                    background: '#38bdf8', 
-                    transition: 'width 1s linear' 
+                    background: teaColors[activeTeaTime].text, 
+                    transition: 'width 1s linear',
+                    boxShadow: `0 0 8px ${teaColors[activeTeaTime].text}`
                   }}
                 ></div>
               </div>
@@ -1057,16 +1103,18 @@ const DietRecommendations = () => {
               <div style={{ display: 'flex', gap: '8px', width: '100%', marginTop: '6px' }}>
                 <button 
                   onClick={toggleBrewing}
-                  className="btn btn-secondary"
                   style={{ 
                     flex: 2, 
                     justifyContent: 'center', 
                     padding: '10px', 
                     fontSize: '0.78rem',
-                    background: isBrewing ? 'transparent' : 'var(--border)',
-                    borderColor: 'var(--border)',
-                    color: 'var(--text-main)',
-                    fontWeight: '600'
+                    background: isBrewing ? 'transparent' : `${teaColors[activeTeaTime].text}26`, // 26 represents ~15% opacity
+                    border: isBrewing ? '1px solid var(--border)' : `1px solid ${teaColors[activeTeaTime].text}40`,
+                    color: isBrewing ? 'var(--text-main)' : teaColors[activeTeaTime].text,
+                    fontWeight: '700',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
                   }}
                   disabled={brewingTimeLeft === 0}
                 >
@@ -1074,15 +1122,13 @@ const DietRecommendations = () => {
                 </button>
                 <button 
                   onClick={resetBrewing}
-                  className="btn"
+                  className="btn btn-secondary"
                   style={{ 
                     flex: 1, 
                     justifyContent: 'center', 
                     padding: '10px', 
                     fontSize: '0.78rem',
-                    background: 'transparent',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text-secondary)'
+                    border: '1px solid var(--border)'
                   }}
                 >
                   Reset
