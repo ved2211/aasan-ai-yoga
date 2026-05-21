@@ -108,105 +108,312 @@ const Dashboard = () => {
     <ParticleBackground />
     <div className="container animate-fade-in" style={{ position: 'relative', zIndex: 1 }}>
       {/* Header */}
-      <header className="dashboard-header">
+      <header className="dashboard-header" style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1.5rem' }}>
         <div>
           <h1 className="gradient-text">{greeting}, {firstName}.</h1>
           <p className="subtitle" style={{ color: 'var(--text-muted)' }}>
-            {sessions.length > 0 ? `You have completed ${sessions.length} sessions.` : 'Ready for your first AI-guided yoga session?'}
+            {sessions.length > 0 ? `You have completed ${sessions.length} clinical sessions.` : 'Ready for your first AI-guided yoga practice?'}
           </p>
         </div>
-        <Link to="/session" className="btn start-btn">
-          <Play fill="currentColor" size={18} />
+        <Link to="/session" className="btn" style={{
+          background: 'rgba(212, 255, 79, 0.15)',
+          color: 'var(--primary)',
+          border: '1px solid rgba(212, 255, 79, 0.4)',
+          borderRadius: '8px',
+          padding: '8px 18px',
+          fontSize: '0.82rem',
+          fontWeight: '600',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '8px',
+          transition: 'all 0.2s',
+          boxShadow: 'none',
+          textDecoration: 'none'
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.background = 'rgba(212, 255, 79, 0.25)';
+          e.currentTarget.style.transform = 'translateY(-1px)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.background = 'rgba(212, 255, 79, 0.15)';
+          e.currentTarget.style.transform = 'translateY(0)';
+        }}
+        >
+          <Play fill="currentColor" size={12} />
           Start Session
         </Link>
       </header>
 
       {/* Live Stat Cards */}
-      <div className="stats-grid">
-        <div className="stat-card glass-panel">
-          <div className="stat-icon" style={{ background: 'rgba(16, 185, 129, 0.1)', color: 'var(--success)', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-            <Activity size={24} />
+      <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
+        
+        {/* Card 1: Avg Accuracy */}
+        <div className="stat-card glass-panel" style={{
+          borderLeft: `4px solid ${avgAccuracy > 80 ? 'var(--success)' : avgAccuracy > 50 ? 'var(--warning)' : avgAccuracy > 0 ? 'var(--danger)' : 'var(--border)'}`,
+          background: `linear-gradient(to right, ${avgAccuracy > 80 ? 'rgba(74, 222, 128, 0.02)' : avgAccuracy > 50 ? 'rgba(250, 204, 21, 0.02)' : avgAccuracy > 0 ? 'rgba(248, 113, 113, 0.02)' : 'rgba(38, 38, 38, 0.02)'}, var(--bg-surface-hover))`,
+          boxShadow: '0 8px 32px -8px rgba(0, 0, 0, 0.2)',
+          transition: 'all 0.3s ease',
+          padding: '1.25rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1.2rem',
+          borderRadius: '12px'
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.boxShadow = `0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px -5px ${avgAccuracy > 80 ? 'rgba(74, 222, 128, 0.1)' : avgAccuracy > 50 ? 'rgba(250, 204, 21, 0.1)' : 'rgba(248, 113, 113, 0.1)'}`;
+          e.currentTarget.style.transform = 'translateY(-2px)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.boxShadow = '0 8px 32px -8px rgba(0, 0, 0, 0.2)';
+          e.currentTarget.style.transform = 'translateY(0)';
+        }}
+        >
+          <div style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            background: avgAccuracy > 80 ? 'rgba(74, 222, 128, 0.1)' : avgAccuracy > 50 ? 'rgba(250, 204, 21, 0.1)' : avgAccuracy > 0 ? 'rgba(248, 113, 113, 0.1)' : 'rgba(38, 38, 38, 0.1)',
+            border: `1px solid ${avgAccuracy > 80 ? 'rgba(74, 222, 128, 0.2)' : avgAccuracy > 50 ? 'rgba(250, 204, 21, 0.2)' : avgAccuracy > 0 ? 'rgba(248, 113, 113, 0.2)' : 'rgba(38, 38, 38, 0.2)'}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: avgAccuracy > 80 ? 'var(--success)' : avgAccuracy > 50 ? 'var(--warning)' : avgAccuracy > 0 ? 'var(--danger)' : 'var(--text-muted)',
+            flexShrink: 0
+          }}>
+            <Activity size={20} />
           </div>
           <div className="stat-content">
-            <h3>Avg AI Accuracy</h3>
-            <div className="stat-value" style={{ color: avgAccuracy > 80 ? 'var(--success)' : avgAccuracy > 50 ? 'var(--warning)' : 'var(--danger)' }}>
+            <h3 style={{ fontSize: '0.72rem', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '2px', fontWeight: 'bold' }}>Avg AI Accuracy</h3>
+            <div className="stat-value" style={{
+              fontSize: '1.6rem',
+              fontWeight: '800',
+              color: avgAccuracy > 80 ? 'var(--success)' : avgAccuracy > 50 ? 'var(--warning)' : avgAccuracy > 0 ? 'var(--danger)' : 'var(--text-main)'
+            }}>
               {avgAccuracy}%
             </div>
-            <div className="stat-trend positive">{avgAccuracy > 80 ? 'Excellent posture alignment' : avgAccuracy > 0 ? 'Consistent practice recommended' : 'No sessions recorded'}</div>
+            <div className="stat-trend" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+              {avgAccuracy > 80 ? 'Optimal alignment detected' : avgAccuracy > 0 ? 'Consistent practice recommended' : 'No logs recorded'}
+            </div>
           </div>
         </div>
 
-        <div className="stat-card glass-panel">
-          <div className="stat-icon" style={{ background: 'rgba(139, 92, 246, 0.1)', color: 'var(--accent)', border: '1px solid rgba(139, 92, 246, 0.2)' }}>
-            <Target size={24} />
+        {/* Card 2: Sessions Completed */}
+        <div className="stat-card glass-panel" style={{
+          borderLeft: '4px solid #6366f1',
+          background: 'linear-gradient(to right, rgba(99, 102, 241, 0.02), var(--bg-surface-hover))',
+          boxShadow: '0 8px 32px -8px rgba(0, 0, 0, 0.2)',
+          transition: 'all 0.3s ease',
+          padding: '1.25rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1.2rem',
+          borderRadius: '12px'
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.boxShadow = '0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px -5px rgba(99, 102, 241, 0.1)';
+          e.currentTarget.style.transform = 'translateY(-2px)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.boxShadow = '0 8px 32px -8px rgba(0, 0, 0, 0.2)';
+          e.currentTarget.style.transform = 'translateY(0)';
+        }}
+        >
+          <div style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            background: 'rgba(99, 102, 241, 0.1)',
+            border: '1px solid rgba(99, 102, 241, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#6366f1',
+            flexShrink: 0
+          }}>
+            <Target size={20} />
           </div>
           <div className="stat-content">
-            <h3>Sessions Completed</h3>
-            <div className="stat-value">{sessions.length}</div>
-            <div className="stat-trend">Total time: {totalTimeStr}</div>
+            <h3 style={{ fontSize: '0.72rem', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '2px', fontWeight: 'bold' }}>Sessions Completed</h3>
+            <div className="stat-value" style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--text-main)' }}>
+              {sessions.length}
+            </div>
+            <div className="stat-trend" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+              Practice volume: {totalTimeStr}
+            </div>
           </div>
         </div>
 
-        <div className="stat-card glass-panel">
-          <div className="stat-icon" style={{ background: 'rgba(245, 158, 11, 0.1)', color: 'var(--warning)', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-            <Flame size={24} />
+        {/* Card 3: Practice Streak */}
+        <div className="stat-card glass-panel" style={{
+          borderLeft: '4px solid #fb923c',
+          background: 'linear-gradient(to right, rgba(251, 146, 60, 0.02), var(--bg-surface-hover))',
+          boxShadow: '0 8px 32px -8px rgba(0, 0, 0, 0.2)',
+          transition: 'all 0.3s ease',
+          padding: '1.25rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1.2rem',
+          borderRadius: '12px'
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.boxShadow = '0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px -5px rgba(251, 146, 60, 0.1)';
+          e.currentTarget.style.transform = 'translateY(-2px)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.boxShadow = '0 8px 32px -8px rgba(0, 0, 0, 0.2)';
+          e.currentTarget.style.transform = 'translateY(0)';
+        }}
+        >
+          <div style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            background: 'rgba(251, 146, 60, 0.1)',
+            border: '1px solid rgba(251, 146, 60, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fb923c',
+            flexShrink: 0
+          }}>
+            <Flame size={20} />
           </div>
           <div className="stat-content">
-            <h3>Practice Streak</h3>
-            <div className="stat-value">{streak} Days</div>
-            <div className="stat-trend">{streak > 0 ? `${streak} consecutive practice day${streak > 1 ? 's' : ''}` : 'Begin your streak today'}</div>
+            <h3 style={{ fontSize: '0.72rem', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '2px', fontWeight: 'bold' }}>Practice Streak</h3>
+            <div className="stat-value" style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--text-main)' }}>
+              {streak} Days
+            </div>
+            <div className="stat-trend" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+              {streak > 0 ? `${streak} day active cycle` : 'Initiate a regular practice'}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="dashboard-content">
+      <div className="dashboard-content" style={{ display: 'grid', gridTemplateColumns: '1.7fr 1.3fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+        
         {/* Recent Activity — REAL data */}
-        <div className="recent-activity glass-panel">
-          <h2 style={{ marginBottom: '1.2rem' }}>Recent Activity</h2>
+        <div className="recent-activity glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+          <h2 style={{
+            fontSize: '0.72rem',
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            color: 'var(--text-secondary)',
+            marginBottom: '1.5rem'
+          }}>
+            Recent Practice Activity
+          </h2>
           {recentSessions.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
-              <p>No sessions yet. <Link to="/session" style={{ color: 'var(--primary)' }}>Start practicing!</Link></p>
+            <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <p style={{ fontSize: '0.85rem' }}>No sessions yet. <Link to="/session" style={{ color: 'var(--primary)', textDecoration: 'underline' }}>Start practicing!</Link></p>
             </div>
           ) : (
-            <div className="activity-list">
-              {recentSessions.map((s, i) => (
-                <div className="activity-item" key={i}>
-                  <div className="activity-indicator" style={{
-                    background: s.accuracy > 80 ? 'var(--success)' : s.accuracy > 50 ? 'var(--warning)' : 'var(--danger)'
-                  }}></div>
-                  <div className="activity-details">
-                    <h4>{ASANA_NAMES[s.asana] || s.asana}</h4>
-                    <p>{s.duration}s • {s.accuracy}% accuracy</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', position: 'relative' }}>
+              <div style={{ position: 'absolute', left: '16px', top: '15px', bottom: '15px', width: '1px', background: 'var(--border)', zIndex: 1 }}></div>
+              {recentSessions.map((s, i) => {
+                const color = s.accuracy > 80 ? 'var(--success)' : s.accuracy > 50 ? 'var(--warning)' : 'var(--danger)';
+                return (
+                  <div style={{ display: 'flex', gap: '1.2rem', position: 'relative', zIndex: 2 }} key={i}>
+                    <div style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      background: s.accuracy > 80 ? 'rgba(74, 222, 128, 0.1)' : s.accuracy > 50 ? 'rgba(250, 204, 21, 0.1)' : 'rgba(248, 113, 113, 0.1)',
+                      border: `1px solid ${s.accuracy > 80 ? 'rgba(74, 222, 128, 0.3)' : s.accuracy > 50 ? 'rgba(250, 204, 21, 0.3)' : 'rgba(248, 113, 113, 0.3)'}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      color: color,
+                      flexShrink: 0,
+                      boxShadow: `0 0 10px ${s.accuracy > 80 ? 'rgba(74, 222, 128, 0.05)' : s.accuracy > 50 ? 'rgba(250, 204, 21, 0.05)' : 'rgba(248, 113, 113, 0.05)'}`
+                    }}>
+                      {String(i + 1).padStart(2, '0')}
+                    </div>
+                    <div style={{
+                      padding: '1.2rem',
+                      background: `linear-gradient(to right, ${s.accuracy > 80 ? 'rgba(74, 222, 128, 0.03)' : s.accuracy > 50 ? 'rgba(250, 204, 21, 0.03)' : 'rgba(248, 113, 113, 0.03)'}, var(--bg-surface-hover))`,
+                      borderRadius: '12px',
+                      border: '1px solid var(--border)',
+                      borderLeft: `3px solid ${color}`,
+                      width: '100%',
+                      transition: 'all 0.25s'
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
+                        <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: color, textTransform: 'uppercase', letterSpacing: '1px' }}>
+                          SESSION {sessions.length - i}
+                        </span>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{timeAgo(s.date)}</span>
+                      </div>
+                      <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.05rem', color: 'var(--text-main)' }}>{ASANA_NAMES[s.asana] || s.asana}</h3>
+                      <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                        Duration: <strong style={{ color: 'var(--text-main)' }}>{s.duration}s</strong> • Alignment Precision: <strong style={{ color: color }}>{s.accuracy}%</strong>
+                      </p>
+                    </div>
                   </div>
-                  <div className="activity-time">{timeAgo(s.date)}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
 
         {/* AI Recommendation — based on REAL weakest pose */}
-        <div className="recommendations glass-panel">
-          <h2 style={{ marginBottom: '1.2rem' }}>
-            <Award size={20} style={{ display: 'inline', marginRight: '8px', color: 'var(--accent)' }} />
-            AI Recommendation
+        <div className="recommendations glass-panel" style={{ padding: '1.5rem', borderLeft: '4px solid #38bdf8', background: 'linear-gradient(to bottom right, rgba(56, 189, 248, 0.02), var(--bg-surface))', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <h2 style={{
+            fontSize: '0.72rem',
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            color: 'var(--text-secondary)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}>
+            <Award size={16} style={{ color: '#38bdf8' }} />
+            AI Diagnostic Feedback
           </h2>
-          <div className="rec-card">
-            <h3 style={{ color: 'var(--primary)', marginBottom: '0.5rem' }}>{recommendation.title}</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.6' }}>{recommendation.body}</p>
+          <div className="rec-card" style={{ padding: '1.2rem', background: 'linear-gradient(to right, rgba(56, 189, 248, 0.03), var(--bg-surface-hover))', borderRadius: '12px', border: '1px solid var(--border)' }}>
+            <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '1px' }}>Clinical Prescription</span>
+            <h3 style={{ margin: '4px 0 8px 0', fontSize: '1.1rem', color: 'var(--text-main)' }}>{recommendation.title}</h3>
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: '1.5', marginBottom: '1.2rem' }}>{recommendation.body}</p>
             <Link
               to="/session"
-              className="btn btn-secondary"
-              style={{ marginTop: '1rem', display: 'inline-flex' }}
+              className="btn"
+              style={{
+                background: 'rgba(56, 189, 248, 0.15)',
+                color: '#38bdf8',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                borderRadius: '8px',
+                padding: '8px 16px',
+                fontSize: '0.8rem',
+                fontWeight: '600',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.2s',
+                boxShadow: 'none'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = 'rgba(56, 189, 248, 0.25)';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = 'rgba(56, 189, 248, 0.15)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
             >
-              {recommendation.pose ? `Practice ${ASANA_NAMES[recommendation.pose] || recommendation.pose}` : 'Begin Session'}
+              <Play fill="currentColor" size={12} />
+              {recommendation.pose ? `Practice ${ASANA_NAMES[recommendation.pose] || recommendation.pose}` : 'Begin Practice'}
             </Link>
           </div>
 
           {/* Mini accuracy breakdown */}
           {sessions.length > 0 && (
-            <div style={{ marginTop: '1.5rem', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
-              <h4 style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.8rem' }}>ACCURACY BREAKDOWN</h4>
+            <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
+              <h4 style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.8rem', fontWeight: 'bold' }}>Physiological Profile by Asana</h4>
               {Object.entries(
                 sessions.reduce((acc, s) => {
                   if (!acc[s.asana]) acc[s.asana] = { total: 0, count: 0 };
@@ -216,14 +423,15 @@ const Dashboard = () => {
                 }, {})
               ).slice(0, 4).map(([id, v]) => {
                 const avg = Math.round(v.total / v.count);
+                const color = avg > 80 ? 'var(--success)' : avg > 50 ? 'var(--warning)' : 'var(--danger)';
                 return (
-                  <div key={id} style={{ marginBottom: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '3px' }}>
-                      <span>{ASANA_NAMES[id] || id}</span>
-                      <span style={{ color: avg > 80 ? 'var(--success)' : avg > 50 ? 'var(--warning)' : 'var(--danger)', fontWeight: '600' }}>{avg}%</span>
+                  <div key={id} style={{ marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>{ASANA_NAMES[id] || id}</span>
+                      <span style={{ color: color, fontWeight: '600' }}>{avg}%</span>
                     </div>
-                    <div style={{ height: '5px', background: 'var(--bg-surface)', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ width: `${avg}%`, height: '100%', background: avg > 80 ? 'var(--success)' : avg > 50 ? 'var(--warning)' : 'var(--danger)', transition: 'width 0.5s ease' }}></div>
+                    <div style={{ height: '6px', background: 'var(--bg-surface-hover)', borderRadius: '3px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+                      <div style={{ width: `${avg}%`, height: '100%', background: color, borderRadius: '3px', transition: 'width 0.5s ease' }}></div>
                     </div>
                   </div>
                 );
@@ -235,97 +443,164 @@ const Dashboard = () => {
     </div>
     
     {/* CLINICAL MILESTONES: Performance Milestones */}
-    <div className="container" style={{ paddingTop: '0', paddingBottom: '3rem' }}>
+    <div className="container" style={{ paddingTop: '0', paddingBottom: '3.5rem' }}>
       <div className="glass-panel" style={{ padding: '1.5rem' }}>
         <h2 style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-muted)', marginBottom: '1.25rem', fontWeight: 'bold' }}>
-          Milestone Tracking
+          Physiological Milestone Tracking
         </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1rem' }}>
           
-          {/* First Session Badge */}
-          <div style={{ 
-            background: 'var(--bg-surface-hover)',
-            border: '1px solid var(--border)',
-            borderRadius: '10px', padding: '1.2rem',
-            opacity: sessions.length > 0 ? 1 : 0.4,
-            transition: 'all 0.3s ease',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px'
-          }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'rgba(74, 222, 128, 0.1)', border: '1px solid rgba(74, 222, 128, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--success)', flexShrink: 0 }}>
-              <Zap size={18} />
-            </div>
-            <div>
-              <h4 style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-main)', marginBottom: '2px' }}>Initiation Milestone</h4>
-              <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>First complete active session</p>
-            </div>
-          </div>
+          {/* Initiation Milestone */}
+          {(() => {
+            const unlocked = sessions.length > 0;
+            return (
+              <div style={{ 
+                background: unlocked ? 'linear-gradient(to bottom right, rgba(74, 222, 128, 0.02), var(--bg-surface))' : 'var(--bg-surface-hover)',
+                border: unlocked ? '1px solid rgba(74, 222, 128, 0.2)' : '1px solid var(--border)',
+                borderRadius: '10px',
+                padding: '1.2rem',
+                opacity: unlocked ? 1 : 0.35,
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px'
+              }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '8px',
+                  background: unlocked ? 'rgba(74, 222, 128, 0.1)' : 'rgba(255, 255, 255, 0.02)',
+                  border: unlocked ? '1px solid rgba(74, 222, 128, 0.2)' : '1px solid var(--border)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: unlocked ? 'var(--success)' : 'var(--text-muted)',
+                  flexShrink: 0
+                }}>
+                  <Zap size={18} />
+                </div>
+                <div>
+                  <h4 style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-main)', marginBottom: '2px' }}>Initiation Milestone</h4>
+                  <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>First complete active session</p>
+                </div>
+              </div>
+            );
+          })()}
 
-          {/* 7-Day Streak Badge */}
-          <div style={{ 
-            background: 'var(--bg-surface-hover)',
-            border: '1px solid var(--border)',
-            borderRadius: '10px', padding: '1.2rem',
-            opacity: streak >= 7 ? 1 : 0.4,
-            transition: 'all 0.3s ease',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px'
-          }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'rgba(250, 204, 21, 0.1)', border: '1px solid rgba(250, 204, 21, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--warning)', flexShrink: 0 }}>
-              <Activity size={18} />
-            </div>
-            <div>
-              <h4 style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-main)', marginBottom: '2px' }}>Consistency Milestone</h4>
-              <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>7-day practice streak</p>
-            </div>
-          </div>
+          {/* Consistency Milestone */}
+          {(() => {
+            const unlocked = streak >= 7;
+            return (
+              <div style={{ 
+                background: unlocked ? 'linear-gradient(to bottom right, rgba(250, 204, 21, 0.02), var(--bg-surface))' : 'var(--bg-surface-hover)',
+                border: unlocked ? '1px solid rgba(250, 204, 21, 0.2)' : '1px solid var(--border)',
+                borderRadius: '10px',
+                padding: '1.2rem',
+                opacity: unlocked ? 1 : 0.35,
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px'
+              }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '8px',
+                  background: unlocked ? 'rgba(250, 204, 21, 0.1)' : 'rgba(255, 255, 255, 0.02)',
+                  border: unlocked ? '1px solid rgba(250, 204, 21, 0.2)' : '1px solid var(--border)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: unlocked ? 'var(--warning)' : 'var(--text-muted)',
+                  flexShrink: 0
+                }}>
+                  <Activity size={18} />
+                </div>
+                <div>
+                  <h4 style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-main)', marginBottom: '2px' }}>Consistency Milestone</h4>
+                  <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>7-day practice streak</p>
+                </div>
+              </div>
+            );
+          })()}
 
-          {/* Perfect Form Badge */}
-          <div style={{ 
-            background: 'var(--bg-surface-hover)',
-            border: '1px solid var(--border)',
-            borderRadius: '10px', padding: '1.2rem',
-            opacity: sessions.some(s => s.accuracy > 95) ? 1 : 0.4,
-            transition: 'all 0.3s ease',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px'
-          }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#38bdf8', flexShrink: 0 }}>
-              <Target size={18} />
-            </div>
-            <div>
-              <h4 style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-main)', marginBottom: '2px' }}>Precision Milestone</h4>
-              <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Achieved &gt;95% pose accuracy</p>
-            </div>
-          </div>
+          {/* Precision Milestone */}
+          {(() => {
+            const unlocked = sessions.some(s => s.accuracy > 95);
+            return (
+              <div style={{ 
+                background: unlocked ? 'linear-gradient(to bottom right, rgba(56, 189, 248, 0.02), var(--bg-surface))' : 'var(--bg-surface-hover)',
+                border: unlocked ? '1px solid rgba(56, 189, 248, 0.2)' : '1px solid var(--border)',
+                borderRadius: '10px',
+                padding: '1.2rem',
+                opacity: unlocked ? 1 : 0.35,
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px'
+              }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '8px',
+                  background: unlocked ? 'rgba(56, 189, 248, 0.1)' : 'rgba(255, 255, 255, 0.02)',
+                  border: unlocked ? '1px solid rgba(56, 189, 248, 0.2)' : '1px solid var(--border)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: unlocked ? '#38bdf8' : 'var(--text-muted)',
+                  flexShrink: 0
+                }}>
+                  <Target size={18} />
+                </div>
+                <div>
+                  <h4 style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-main)', marginBottom: '2px' }}>Precision Milestone</h4>
+                  <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Achieved &gt;95% pose accuracy</p>
+                </div>
+              </div>
+            );
+          })()}
           
-          {/* Dedicated Yogi Badge */}
-          <div style={{ 
-            background: 'var(--bg-surface-hover)',
-            border: '1px solid var(--border)',
-            borderRadius: '10px', padding: '1.2rem',
-            opacity: sessions.length >= 20 ? 1 : 0.4,
-            transition: 'all 0.3s ease',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px'
-          }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#a78bfa', flexShrink: 0 }}>
-              <Award size={18} />
-            </div>
-            <div>
-              <h4 style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-main)', marginBottom: '2px' }}>Commitment Milestone</h4>
-              <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Logged 20 completed sessions</p>
-            </div>
-          </div>
+          {/* Commitment Milestone */}
+          {(() => {
+            const unlocked = sessions.length >= 20;
+            return (
+              <div style={{ 
+                background: unlocked ? 'linear-gradient(to bottom right, rgba(167, 139, 250, 0.02), var(--bg-surface))' : 'var(--bg-surface-hover)',
+                border: unlocked ? '1px solid rgba(167, 139, 250, 0.2)' : '1px solid var(--border)',
+                borderRadius: '10px',
+                padding: '1.2rem',
+                opacity: unlocked ? 1 : 0.35,
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px'
+              }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '8px',
+                  background: unlocked ? 'rgba(167, 139, 250, 0.1)' : 'rgba(255, 255, 255, 0.02)',
+                  border: unlocked ? '1px solid rgba(167, 139, 250, 0.2)' : '1px solid var(--border)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: unlocked ? '#a78bfa' : 'var(--text-muted)',
+                  flexShrink: 0
+                }}>
+                  <Award size={18} />
+                </div>
+                <div>
+                  <h4 style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-main)', marginBottom: '2px' }}>Commitment Milestone</h4>
+                  <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Logged 20 completed sessions</p>
+                </div>
+              </div>
+            );
+          })()}
 
         </div>
       </div>
     </div>
-
     </>
   );
 };
