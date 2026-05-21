@@ -157,10 +157,10 @@ const superfoods = {
   ]
 };
 
-// ─── AYURVEDIC DOSHA QUIZ QUESTIONS & PROFILES ─────────────────────────────
-const doshaQuizQuestions = [
+// ─── AYURVEDIC DOSHA QUIZ ROTATING POOL (7 Questions) ───────────────────────
+const doshaQuizQuestionsPool = [
   {
-    id: 0,
+    id: "climate",
     q: "How does your body typically react to the climate?",
     options: [
       { text: "I get cold very easily and prefer warm, humid climates", value: "vata" },
@@ -169,7 +169,7 @@ const doshaQuizQuestions = [
     ]
   },
   {
-    id: 1,
+    id: "digestion",
     q: "Describe your general digestion and appetite:",
     options: [
       { text: "Highly irregular; variable hunger, gas, or bloating are common", value: "vata" },
@@ -178,12 +178,48 @@ const doshaQuizQuestions = [
     ]
   },
   {
-    id: 2,
+    id: "stress",
     q: "What is your emotional and mental tendency when facing stress?",
     options: [
       { text: "I become anxious, worried, restless, with thousands of racing thoughts", value: "vata" },
       { text: "I become impatient, easily irritated, competitive, or quick to anger", value: "pitta" },
       { text: "I stay relatively calm, but tend to avoid confrontation or become complacent", value: "kapha" }
+    ]
+  },
+  {
+    id: "sleep",
+    q: "How would you describe your typical sleep cycle?",
+    options: [
+      { text: "Light or irregular sleep; I wake up frequently and struggle to fall back asleep", value: "vata" },
+      { text: "Sound and moderate; I fall asleep easily but wake up if the room gets too hot", value: "pitta" },
+      { text: "Deep, long, and heavy sleep; I hate waking up and often feel groggy in the morning", value: "kapha" }
+    ]
+  },
+  {
+    id: "frame",
+    q: "How is your general physical build and joint structure?",
+    options: [
+      { text: "Slender or thin frame; prominent joints that tend to crack or feel stiff", value: "vata" },
+      { text: "Medium, athletic build; flexible joints and highly efficient muscle tone", value: "pitta" },
+      { text: "Sturdy, broad, or solid frame; large joints with great natural stability", value: "kapha" }
+    ]
+  },
+  {
+    id: "skin",
+    q: "What are the dominant features of your skin?",
+    options: [
+      { text: "Dry, rough, thin skin that easily gets cold or chapped in dry weather", value: "vata" },
+      { text: "Warm, soft, sensitive skin; easily sunburns or breaks out in rashes/redness", value: "pitta" },
+      { text: "Thick, soft, smooth skin that stays naturally hydrated or slightly oily", value: "kapha" }
+    ]
+  },
+  {
+    id: "learning",
+    q: "How do you naturally learn and remember new information?",
+    options: [
+      { text: "I grasp concepts extremely fast, but tend to forget them just as quickly", value: "vata" },
+      { text: "I learn methodically, have a sharp structured memory, and love analyzing details", value: "pitta" },
+      { text: "I take time to understand new concepts, but once learned, I never forget them", value: "kapha" }
     ]
   }
 ];
@@ -289,6 +325,7 @@ const DietRecommendations = () => {
 
   // Ayurvedic Dosha Quiz State
   const [quizStep, setQuizStep] = useState(0); // 0: Start, 1: Q1, 2: Q2, 3: Q3, 4: Result
+  const [activeQuestions, setActiveQuestions] = useState([]);
   const [quizAnswers, setQuizAnswers] = useState([]);
   const [dominantDosha, setDominantDosha] = useState(() => {
     return localStorage.getItem('user_dominant_dosha') || null;
@@ -300,7 +337,7 @@ const DietRecommendations = () => {
   const [isBrewing, setIsBrewing] = useState(false);
   const timerRef = useRef(null);
 
-  // Determine current tea selection based on real time of day automatically on mount
+  // Set current tea time on mount
   useEffect(() => {
     const currentHour = new Date().getHours();
     if (currentHour >= 6 && currentHour < 12) {
@@ -356,26 +393,22 @@ const DietRecommendations = () => {
   const { caloriesBurned } = getCalorieData(todaySessions);
 
   // Goal & Macro Adjuster Logic
-  // Adjust base plan calories & macro split percentages dynamically
   let baseCalories = plan.calories;
   let baseMacros = { ...plan.macros };
 
   if (goal === 'Recovery') {
-    // Increase baseline calories slightly, shift carbs/fat to protein
     baseCalories = Math.round(plan.calories * 1.08); // +8% calories
     baseMacros.protein = Math.min(baseMacros.protein + 6, 40);
     baseMacros.carbs = Math.max(baseMacros.carbs - 3, 5);
     baseMacros.fats = 100 - baseMacros.protein - baseMacros.carbs;
   } else if (goal === 'Weight') {
-    // Reduce baseline calories, keep protein high to retain muscle tissue
     baseCalories = Math.round(plan.calories * 0.85); // -15% calories
     baseMacros.protein = Math.min(baseMacros.protein + 4, 38);
     baseMacros.fats = Math.max(baseMacros.fats - 6, 20);
     baseMacros.carbs = 100 - baseMacros.protein - baseMacros.fats;
   }
 
-  // Calculate dynamic macronutrient grams based on goal-adjusted parameters
-  // Carbs/Protein = 4 kcal/g, Fats = 9 kcal/g
+  // Macro grams calculation
   const carbGrams = Math.round((baseCalories * (baseMacros.carbs / 100)) / 4);
   const proteinGrams = Math.round((baseCalories * (baseMacros.protein / 100)) / 4);
   const fatGrams = Math.round((baseCalories * (baseMacros.fats / 100)) / 9);
@@ -393,7 +426,7 @@ const DietRecommendations = () => {
     }));
   };
 
-  // Copy grocery list to clipboard
+  // Copy grocery list
   const copyGroceryList = () => {
     const listString = plan.grocery.map(item => `[ ] ${item}`).join('\n');
     navigator.clipboard.writeText(`My Yoga Diet Shopping List (${preference} - ${exertionInfo.label}):\n\n${listString}`)
@@ -401,7 +434,15 @@ const DietRecommendations = () => {
       .catch(() => toast.error('Failed to copy. Please try again.'));
   };
 
-  // Ayurvedic Dosha Quiz Processors
+  // Ayurvedic Dosha Quiz Processors with ROTATING/SHUFFLED questions
+  const initializeQuiz = () => {
+    // Pick 3 random, unique questions from the pool of 7
+    const shuffled = [...doshaQuizQuestionsPool].sort(() => 0.5 - Math.random());
+    setActiveQuestions(shuffled.slice(0, 3));
+    setQuizAnswers([]);
+    setQuizStep(1);
+  };
+
   const handleQuizAnswer = (value) => {
     const nextAnswers = [...quizAnswers, value];
     setQuizAnswers(nextAnswers);
@@ -409,7 +450,7 @@ const DietRecommendations = () => {
     if (quizStep < 3) {
       setQuizStep(prev => prev + 1);
     } else {
-      // Calculate dominant dosha
+      // Calculate dominant dosha from dynamic answers
       const counts = { vata: 0, pitta: 0, kapha: 0 };
       nextAnswers.forEach(ans => counts[ans]++);
       
@@ -428,8 +469,7 @@ const DietRecommendations = () => {
   };
 
   const resetQuiz = () => {
-    setQuizAnswers([]);
-    setQuizStep(1);
+    initializeQuiz();
   };
 
   // Steeping Timer Controls
@@ -497,10 +537,10 @@ const DietRecommendations = () => {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1.9fr 1.1fr', gap: '1.5rem' }} className="responsive-grid">
         
-        {/* LEFT COLUMN - Meals, Goals and Ayurveda */}
+        {/* LEFT COLUMN */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           
-          {/* INTERACTIVE GOALS & DIET PREFERENCE ADJUSTER */}
+          {/* INTERACTIVE GOALS & DIET PREFERENCE */}
           <div className="glass-panel" style={{ padding: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', borderBottom: '1px solid var(--border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
               <div>
@@ -580,11 +620,11 @@ const DietRecommendations = () => {
               {exertion === 'high' && `Strong practice! ${todayAvgAccuracy}% accuracy in ${Math.floor(todayDuration/60)} minutes. Body is ready for maximum calorie loading and recovery nutrients!`}
             </div>
 
-            {/* UPGRADED 4-MEAL TIMELINE FLOW */}
+            {/* timeline */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', position: 'relative' }}>
               <div style={{ position: 'absolute', left: '16px', top: '15px', bottom: '15px', width: '2px', background: 'var(--border)', zIndex: 1 }}></div>
 
-              {/* Meal 1: Pre-Yoga */}
+              {/* Meal 1 */}
               <div style={{ display: 'flex', gap: '1.2rem', position: 'relative', zIndex: 2 }}>
                 <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', boxShadow: '0 0 10px rgba(212,255,79,0.3)', flexShrink: 0, color: '#000' }}>
                   🌅
@@ -596,7 +636,7 @@ const DietRecommendations = () => {
                 </div>
               </div>
 
-              {/* Meal 2: Post-Yoga */}
+              {/* Meal 2 */}
               <div style={{ display: 'flex', gap: '1.2rem', position: 'relative', zIndex: 2 }}>
                 <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', boxShadow: '0 0 10px rgba(74,222,128,0.3)', flexShrink: 0, color: '#000' }}>
                   🧘
@@ -608,7 +648,7 @@ const DietRecommendations = () => {
                 </div>
               </div>
 
-              {/* Meal 3: Mid-Day Snack */}
+              {/* Meal 3 */}
               <div style={{ display: 'flex', gap: '1.2rem', position: 'relative', zIndex: 2 }}>
                 <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', boxShadow: '0 0 10px rgba(163,163,163,0.3)', flexShrink: 0, color: '#000' }}>
                   ⚡
@@ -620,7 +660,7 @@ const DietRecommendations = () => {
                 </div>
               </div>
 
-              {/* Meal 4: Dinner */}
+              {/* Meal 4 */}
               <div style={{ display: 'flex', gap: '1.2rem', position: 'relative', zIndex: 2 }}>
                 <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'var(--warning)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', boxShadow: '0 0 10px rgba(250,204,21,0.3)', flexShrink: 0, color: '#000' }}>
                   🌙
@@ -634,7 +674,7 @@ const DietRecommendations = () => {
             </div>
           </div>
 
-          {/* DYNAMIC SUPERFOODS SPOTLIGHT */}
+          {/* SUPERFOODS SPOTLIGHT */}
           <div className="glass-panel" style={{ padding: '2rem' }}>
             <h2 style={{ marginBottom: '0.5rem' }}>✨ Yogic Superfoods Spotlight</h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Ayurvedic and modern functional foods matching your active exertion level.</p>
@@ -650,7 +690,7 @@ const DietRecommendations = () => {
             </div>
           </div>
 
-          {/* BRAND NEW INTERACTIVE AYURVEDIC DOSHA QUIZ CARD */}
+          {/* DYNAMIC ROTATING AYURVEDIC DOSHA QUIZ CARD */}
           <div className="glass-panel" style={{ padding: '2.2rem 2rem', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', right: '-40px', top: '-40px', width: '150px', height: '150px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(212,255,79,0.06) 0%, transparent 70%)', zIndex: 1 }}></div>
 
@@ -663,19 +703,25 @@ const DietRecommendations = () => {
                 Discover your custom genetic elemental balance (Dosha) to unlock deep dietary recommendations.
               </p>
 
-              {/* QUIZ INTERACTIVE INTERFACE */}
-              {quizStep === 0 && !dominantDosha && (
+              {/* Quiz Initial State */}
+              {quizStep === 0 && (
                 <div style={{ textAlign: 'center', padding: '2rem 1rem', background: 'var(--bg-surface-hover)', borderRadius: '12px', border: '1px dashed var(--border)' }}>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1.2rem', maxWidth: '400px', margin: '0 auto 1.2rem auto' }}>
-                    Take our 3-question holistic assessment to identify whether you are primarily Vata, Pitta, or Kapha.
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1.2rem', maxWidth: '420px', margin: '0 auto 1.2rem auto' }}>
+                    Take our quick, dynamic diagnostic assessment to calculate your dominant physical constitution (**Vata**, **Pitta**, or **Kapha**).
                   </p>
-                  <button className="btn" onClick={() => setQuizStep(1)}>
-                    Start Ayurvedic Assessment 📿
+                  <button className="btn" onClick={initializeQuiz}>
+                    {dominantDosha ? "Retake Dynamic Quiz 🔄" : "Start Shuffled Quiz 📿"}
                   </button>
+                  {dominantDosha && (
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '8px' }}>
+                      Currently stored profile: <strong style={{ color: doshaProfiles[dominantDosha].color }}>{doshaProfiles[dominantDosha].name}</strong>
+                    </p>
+                  )}
                 </div>
               )}
 
-              {quizStep > 0 && quizStep <= 3 && (
+              {/* Shuffled Quiz In-Progress */}
+              {quizStep > 0 && quizStep <= 3 && activeQuestions.length > 0 && (
                 <div style={{ background: 'var(--bg-surface-hover)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.8rem', fontWeight: 'bold' }}>
                     <span>QUESTION {quizStep} OF 3</span>
@@ -688,11 +734,11 @@ const DietRecommendations = () => {
                   </div>
 
                   <h3 style={{ fontSize: '1.1rem', marginBottom: '1.2rem', lineHeight: '1.4', color: 'var(--text-main)' }}>
-                    {doshaQuizQuestions[quizStep - 1].q}
+                    {activeQuestions[quizStep - 1].q}
                   </h3>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    {doshaQuizQuestions[quizStep - 1].options.map((opt, i) => (
+                    {activeQuestions[quizStep - 1].options.map((opt, i) => (
                       <button
                         key={i}
                         className="btn btn-secondary"
@@ -715,40 +761,40 @@ const DietRecommendations = () => {
                 </div>
               )}
 
-              {/* DOSHA RESULT DISPLAY */}
-              {(quizStep === 4 || dominantDosha) && (
-                <div style={{ background: 'var(--bg-surface-hover)', padding: '1.5rem', borderRadius: '12px', border: `1px solid ${doshaProfiles[dominantDosha || 'vata'].color}`, position: 'relative' }}>
+              {/* Quiz Results Screen */}
+              {(quizStep === 4 || (quizStep === 0 && dominantDosha)) && dominantDosha && (
+                <div style={{ background: 'var(--bg-surface-hover)', padding: '1.5rem', borderRadius: '12px', border: `1px solid ${doshaProfiles[dominantDosha].color}`, position: 'relative', marginTop: quizStep === 4 ? '0' : '1rem' }}>
                   <span style={{
                     position: 'absolute', right: '15px', top: '15px', fontSize: '0.7rem', fontWeight: 'bold', 
                     padding: '4px 8px', borderRadius: '20px', background: 'rgba(255,255,255,0.05)',
-                    color: doshaProfiles[dominantDosha || 'vata'].color, border: `1px solid ${doshaProfiles[dominantDosha || 'vata'].color}`
+                    color: doshaProfiles[dominantDosha].color, border: `1px solid ${doshaProfiles[dominantDosha].color}`
                   }}>
-                    DOMINANT PROFILE
+                    ACTIVE CONSTITUTION
                   </span>
                   
-                  <h3 style={{ fontSize: '1.3rem', color: doshaProfiles[dominantDosha || 'vata'].color, marginBottom: '0.5rem' }}>
-                    {doshaProfiles[dominantDosha || 'vata'].name}
+                  <h3 style={{ fontSize: '1.3rem', color: doshaProfiles[dominantDosha].color, marginBottom: '0.5rem' }}>
+                    {doshaProfiles[dominantDosha].name}
                   </h3>
                   
                   <div style={{ display: 'flex', gap: '6px', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
                     <span>Dietary Focus:</span>
-                    <strong style={{ color: 'var(--text-main)' }}>{doshaProfiles[dominantDosha || 'vata'].focus}</strong>
+                    <strong style={{ color: 'var(--text-main)' }}>{doshaProfiles[dominantDosha].focus}</strong>
                   </div>
 
                   <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: '1.5', marginBottom: '1rem' }}>
-                    {doshaProfiles[dominantDosha || 'vata'].desc}
+                    {doshaProfiles[dominantDosha].desc}
                   </p>
 
-                  <div style={{ padding: '1rem', background: 'var(--bg-surface)', borderRadius: '8px', borderLeft: `3px solid ${doshaProfiles[dominantDosha || 'vata'].color}`, marginBottom: '1rem', fontSize: '0.82rem' }}>
-                    💡 <strong>Nutritional Guide:</strong> {doshaProfiles[dominantDosha || 'vata'].advice}
+                  <div style={{ padding: '1rem', background: 'var(--bg-surface)', borderRadius: '8px', borderLeft: `3px solid ${doshaProfiles[dominantDosha].color}`, marginBottom: '1rem', fontSize: '0.82rem' }}>
+                    💡 <strong>Nutritional Guide:</strong> {doshaProfiles[dominantDosha].advice}
                   </div>
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border)', paddingTop: '1rem', flexWrap: 'wrap', gap: '10px' }}>
                     <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                      🌿 Herbal Ally: <strong style={{ color: 'var(--text-main)' }}>{doshaProfiles[dominantDosha || 'vata'].ally}</strong>
+                      🌿 Herbal Ally: <strong style={{ color: 'var(--text-main)' }}>{doshaProfiles[dominantDosha].ally}</strong>
                     </span>
                     <button className="btn btn-secondary" onClick={resetQuiz} style={{ padding: '6px 12px', fontSize: '0.75rem' }}>
-                      Retake Assessment
+                      Retake Assessment (New Pool 🔄)
                     </button>
                   </div>
                 </div>
@@ -758,10 +804,10 @@ const DietRecommendations = () => {
 
         </div>
 
-        {/* RIGHT COLUMN - Hydration, Macros, Grocery, Hourly Tea Brewer */}
+        {/* RIGHT COLUMN */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           
-          {/* Hydration Tracker */}
+          {/* Hydration */}
           <div className="glass-panel" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
             <h2 style={{ marginBottom: '0.5rem' }}>Hydration</h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.2rem' }}>
@@ -792,20 +838,18 @@ const DietRecommendations = () => {
               Reset
             </button>
 
-            {/* Hydration dynamic advise */}
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '0.8rem', width: '100%' }}>
               💡 {exertion === 'high' ? "Cramping risk is High. Add a pinch of pink salt to your water." : "Keep sipping water regularly to maintain peak muscle flexibility."}
             </p>
           </div>
 
-          {/* DYNAMIC INTERACTIVE MACRONUTRIENT VISUALIZER */}
+          {/* MACRONUTRIENT VISUALIZER */}
           <div className="glass-panel" style={{ padding: '1.8rem 1.5rem' }}>
             <h2 style={{ marginBottom: '0.4rem', fontSize: '1.15rem' }}>🎯 Goal Macro Splits</h2>
             <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '1.2rem' }}>Recommended ratios for your {preference} diet</p>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               
-              {/* Carbs Bar */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '4px', fontWeight: '500' }}>
                   <span>🍞 Carbs ({baseMacros.carbs}%)</span>
@@ -816,7 +860,6 @@ const DietRecommendations = () => {
                 </div>
               </div>
 
-              {/* Protein Bar */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '4px', fontWeight: '500' }}>
                   <span>💪 Protein ({baseMacros.protein}%)</span>
@@ -827,7 +870,6 @@ const DietRecommendations = () => {
                 </div>
               </div>
 
-              {/* Fats Bar */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '4px', fontWeight: '500' }}>
                   <span>🥑 Fats ({baseMacros.fats}%)</span>
@@ -841,7 +883,7 @@ const DietRecommendations = () => {
             </div>
           </div>
 
-          {/* DYNAMIC BRAND NEW HOURLY HERBAL TEA BREWER CARD */}
+          {/* TEA BREWER */}
           <div className="glass-panel" style={{ padding: '1.8rem 1.5rem', textAlign: 'left' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.3rem' }}>
               <span style={{ fontSize: '1.2rem' }}>🫖</span>
@@ -871,7 +913,6 @@ const DietRecommendations = () => {
               ))}
             </div>
 
-            {/* Selected Tea Info */}
             <div style={{ padding: '1rem', background: 'var(--bg-surface-hover)', borderRadius: '10px', borderLeft: '3px solid var(--primary)', marginBottom: '1.2rem' }}>
               <h4 style={{ color: 'var(--text-main)', fontSize: '0.9rem', marginBottom: '4px' }}>{teaRecipes[activeTeaTime].title}</h4>
               <p style={{ fontSize: '0.72rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px', fontWeight: 'bold' }}>
@@ -882,12 +923,10 @@ const DietRecommendations = () => {
               </p>
             </div>
 
-            {/* Steeping Timer Interface */}
+            {/* Steeping Timer */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border)' }}>
               
-              {/* Steeping Cup Illustration (steaming cup SVG/CSS) */}
               <div style={{ position: 'relative', width: '50px', height: '40px', marginBottom: '8px', display: 'flex', justifyContent: 'center' }}>
-                {/* Steaming lines */}
                 {isBrewing && (
                   <div style={{ position: 'absolute', top: '-15px', display: 'flex', gap: '5px', animation: 'fadeIn 1s infinite alternate' }}>
                     <span style={{ width: '2px', height: '12px', background: 'var(--primary)', borderRadius: '1px', display: 'inline-block', opacity: 0.7, transform: 'skewX(-10deg)' }}></span>
@@ -895,11 +934,8 @@ const DietRecommendations = () => {
                     <span style={{ width: '2px', height: '12px', background: 'var(--primary)', borderRadius: '1px', display: 'inline-block', opacity: 0.7, transform: 'skewX(-5deg)' }}></span>
                   </div>
                 )}
-                {/* Cup Body */}
                 <div style={{ width: '36px', height: '26px', border: '3px solid var(--text-main)', borderTop: 'none', borderBottomLeftRadius: '12px', borderBottomRightRadius: '12px', marginTop: '5px', position: 'relative' }}>
-                  {/* Handle */}
                   <div style={{ width: '10px', height: '12px', border: '3px solid var(--text-main)', borderLeft: 'none', borderRadius: '0 8px 8px 0', position: 'absolute', right: '-12px', top: '2px' }}></div>
-                  {/* Water inside */}
                   <div style={{ 
                     position: 'absolute', bottom: '2px', left: '2px', right: '2px', 
                     height: isBrewing ? '16px' : '6px', 
@@ -941,7 +977,7 @@ const DietRecommendations = () => {
             </div>
           </div>
 
-          {/* DYNAMIC INTERACTIVE WEEKLY GROCERY CHECKLIST */}
+          {/* GROCERY CHECKLIST */}
           <div className="glass-panel" style={{ padding: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h2 style={{ fontSize: '1.15rem' }}>🛒 Shopping List</h2>
