@@ -8,7 +8,7 @@ import './YogaSession.css';
 
 const asanas = [
   { id: 'tadasana', name: 'Tadasana', english: 'Mountain Pose', description: 'Improves posture and balance.', imgUrl: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=400&h=300' },
-  { id: 'vrikshasana', name: 'Vrikshasana', english: 'Tree Pose', description: 'Increases concentration and leg strength.', imgUrl: 'https://images.unsplash.com/photo-1566501206188-5dd0cf160a0e?auto=format&fit=crop&q=80&w=400&h=300' },
+  { id: 'vrikshasana', name: 'Vrikshasana', english: 'Tree Pose', description: 'Increases concentration and leg strength.', imgUrl: '/vrikshasana.png' },
   { id: 'bhujangasana', name: 'Bhujangasana', english: 'Cobra Pose', description: 'Strengthens the back and improves flexibility.', imgUrl: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=400&h=300' },
   { id: 'trikonasana', name: 'Trikonasana', english: 'Triangle Pose', description: 'Stretches the body and improves digestion.', imgUrl: 'https://images.unsplash.com/photo-1603988363607-e1e4a66962c6?auto=format&fit=crop&q=80&w=400&h=300' },
   { id: 'padmasana', name: 'Padmasana', english: 'Lotus Pose', description: 'Helps in meditation and calming the mind.', imgUrl: 'https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?auto=format&fit=crop&q=80&w=400&h=300' },
