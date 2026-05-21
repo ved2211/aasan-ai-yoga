@@ -32,7 +32,7 @@ const YogaSession = () => {
   const [selectedAsana, setSelectedAsana] = useState('Tadasana');
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   
-  const { isConnected, pressureData, sweatLevel, connectMat, disconnectMat, simulateConnection, error } = useSmartMat();
+  const { isConnected, pressureData, connectMat, disconnectMat, simulateConnection, error } = useSmartMat();
 
   const currentAsanaDetails = asanas.find(a => a.name === selectedAsana) || asanas[0];
   
@@ -354,9 +354,6 @@ const YogaSession = () => {
               <div className="mat-cell" style={{ background: getPressureColor(pressureData[1]) }}></div>
               <div className="mat-cell" style={{ background: getPressureColor(pressureData[2]) }}></div>
               <div className="mat-cell" style={{ background: getPressureColor(pressureData[3]) }}></div>
-            </div>
-            <div className="mat-stats">
-              <p>Sweat Level: <span style={{ color: sweatLevel === 'High' ? 'var(--warning)' : 'var(--text-main)' }}>{sweatLevel}</span></p>
             </div>
           </div>
         </div>
