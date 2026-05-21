@@ -215,23 +215,39 @@ const YogaSession = () => {
           </div>
         </div>
         
-        <div className="connection-status">
-          <div className={`status-dot ${isConnected ? 'connected' : 'disconnected'}`}></div>
-          <span>{isConnected ? 'Smart Mat: Connected' : 'Smart Mat: Disconnected'}</span>
-          {!isConnected && (
-            <>
-              <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.8rem', marginLeft: '10px' }} onClick={connectMat}>
-                Pair Mat
-              </button>
-              <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.8rem', marginLeft: '5px' }} onClick={simulateConnection}>
-                Simulate
-              </button>
-            </>
-          )}
-          {isConnected && (
-             <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.8rem', marginLeft: '10px' }} onClick={disconnectMat}>
-               Disconnect
-             </button>
+        <div className="connection-status" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <div className={`status-dot ${isConnected ? 'connected' : 'disconnected'}`}></div>
+            <span>{isConnected ? 'Smart Mat: Connected' : 'Smart Mat: Disconnected'}</span>
+            {!isConnected && (
+              <>
+                <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.8rem', marginLeft: '10px' }} onClick={connectMat}>
+                  Pair Mat
+                </button>
+                <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.8rem', marginLeft: '5px' }} onClick={simulateConnection}>
+                  Simulate
+                </button>
+              </>
+            )}
+            {isConnected && (
+               <button className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.8rem', marginLeft: '10px' }} onClick={disconnectMat}>
+                 Disconnect
+               </button>
+            )}
+          </div>
+          {error && (
+            <div style={{ 
+              color: '#f87171', 
+              fontSize: '0.75rem', 
+              padding: '4px 8px',
+              background: 'rgba(248, 113, 113, 0.05)',
+              border: '1px solid rgba(248, 113, 113, 0.2)',
+              borderRadius: '6px',
+              maxWidth: '300px',
+              textAlign: 'right'
+            }}>
+              {error}
+            </div>
           )}
         </div>
       </header>
