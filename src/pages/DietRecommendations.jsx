@@ -506,8 +506,18 @@ const DietRecommendations = () => {
       setDominantDosha(dominant);
       localStorage.setItem('user_dominant_dosha', dominant);
       
-      // Store in Firebase Firestore collection 'ayurveda_quizzes'
-      saveQuizData(nextAnswers, dominant);
+      // Store in Firebase Firestore collection 'ayurveda_quizzes' with premium real-time toast feedback
+      toast.promise(
+        saveQuizData(nextAnswers, dominant),
+        {
+          loading: 'Saving constitution profile to Firebase Firestore...',
+          success: <b>Ayurvedic profile successfully saved to Firestore! ☁️</b>,
+          error: <b>Could not save to Firestore. Check security rules or auth state. ⚠️</b>,
+        },
+        {
+          duration: 5000
+        }
+      );
       
       setQuizStep(4);
       toast.success(`Complete! Your dominant Ayurvedic Dosha profile is: ${doshaProfiles[dominant].name}`, {

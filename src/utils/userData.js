@@ -73,7 +73,7 @@ export const generateChartData = (sessions) => {
 
 // ─── FIRESTORE: Save Ayurvedic quiz answers & dominant dosha ──────────────────
 export const saveQuizData = async (answers, dominantDosha) => {
-  if (!auth.currentUser) return;
+  if (!auth.currentUser) throw new Error("User not logged in");
 
   try {
     await addDoc(collection(db, 'ayurveda_quizzes'), {
@@ -85,6 +85,7 @@ export const saveQuizData = async (answers, dominantDosha) => {
     });
   } catch (err) {
     console.error('Error saving Ayurvedic quiz to Firestore:', err);
+    throw err;
   }
 };
 
