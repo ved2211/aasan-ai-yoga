@@ -10,7 +10,7 @@ const asanas = [
   { id: 'tadasana', name: 'Tadasana', english: 'Mountain Pose', description: 'Improves posture and balance.', imgUrl: '/tadasana.png', videoUrl: 'https://www.youtube.com/embed/2HTvZp5rLn4' },
   { id: 'vrikshasana', name: 'Vrikshasana', english: 'Tree Pose', description: 'Increases concentration and leg strength.', imgUrl: '/vrikshasana.png', videoUrl: 'https://www.youtube.com/embed/0x2gYJee0E4' },
   { id: 'bhujangasana', name: 'Bhujangasana', english: 'Cobra Pose', description: 'Strengthens the back and improves flexibility.', imgUrl: '/bhujangasana.png', videoUrl: 'https://www.youtube.com/embed/fOdrW7nFtyA' },
-  { id: 'trikonasana', name: 'Trikonasana', english: 'Triangle Pose', description: 'Stretches the body and improves digestion.', imgUrl: '/trikonasana.png', videoUrl: 'https://www.youtube.com/embed/S6gB0QhnTyc' },
+  { id: 'trikonasana', name: 'Trikonasana', english: 'Triangle Pose', description: 'Stretches the body and improves digestion.', imgUrl: '/trikonasana.png', videoUrl: 'https://www.youtube.com/embed/KaTv00w1hqk' },
   { id: 'padmasana', name: 'Padmasana', english: 'Lotus Pose', description: 'Helps in meditation and calming the mind.', imgUrl: '/padmasana.png', videoUrl: 'https://www.youtube.com/embed/Fw0vSgEwYJk' },
   { id: 'vajrasana', name: 'Vajrasana', english: 'Thunderbolt Pose', description: 'Good for digestion after meals.', imgUrl: '/vajrasana.png', videoUrl: 'https://www.youtube.com/embed/a9n_yH9o4vI' },
   { id: 'adho_mukha_svanasana', name: 'Adho Mukha Svanasana', english: 'Downward Dog', description: 'Strengthens arms and legs.', imgUrl: '/adho_mukha_svanasana.png', videoUrl: 'https://www.youtube.com/embed/EC7RGJ975iM' },
