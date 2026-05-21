@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { auth } from '../firebase';
 import { subscribeToUserSessions, saveQuizData, subscribeToUserQuizzes } from '../utils/userData';
 import { toast } from 'react-hot-toast';
+import ParticleBackground from '../components/ParticleBackground';
 
 // ─── COMPREHENSIVE DIET PLANS (4-Meal Structure + Macros + Grocery Lists) ─────
 const dietPlans = {
@@ -547,7 +548,9 @@ const DietRecommendations = () => {
   };
 
   return (
-    <div className="container animate-fade-in" style={{ paddingBottom: '4rem' }}>
+    <>
+    <ParticleBackground />
+    <div className="container animate-fade-in" style={{ position: 'relative', zIndex: 1, paddingBottom: '4rem' }}>
       <header style={{ marginBottom: '1.5rem' }} className="responsive-header">
         <div>
           <h1 className="gradient-text">Diet & Holistic <span className="accent">Nutrition</span></h1>
@@ -1157,6 +1160,7 @@ const DietRecommendations = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -7,6 +7,7 @@ import {
 } from 'recharts';
 import { auth } from '../firebase';
 import { subscribeToUserSessions, generateChartData } from '../utils/userData';
+import ParticleBackground from '../components/ParticleBackground';
 
 const ASANA_NAMES = {
   tadasana: 'Tadasana', vrikshasana: 'Vrikshasana', bhujangasana: 'Bhujangasana',
@@ -111,7 +112,9 @@ const ProgressTracking = () => {
   };
 
   return (
-    <div className="container animate-fade-in">
+    <>
+    <ParticleBackground />
+    <div className="container animate-fade-in" style={{ position: 'relative', zIndex: 1 }}>
       {/* Header */}
       <header className="responsive-header" style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
@@ -147,10 +150,10 @@ const ProgressTracking = () => {
         </div>
       </div>
 
-      {/* Row 1: Area Chart + AI Insights */}
+      {/* Row 1: Area Chart + Performance Insights */}
       <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
         <div className="glass-panel" style={{ padding: '2rem' }}>
-          <h2 style={{ marginBottom: '1.5rem' }}>📈 Weekly Performance</h2>
+          <h2 style={{ marginBottom: '1.5rem', fontSize: '1.2rem', fontWeight: '600' }}>Weekly Performance</h2>
           {sessions.length === 0 ? <EmptyState message="No data yet. Practice a pose in the Yoga Session page to populate this chart!" /> : (
             <div style={{ height: '300px' }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -178,21 +181,21 @@ const ProgressTracking = () => {
           )}
         </div>
 
-        {/* AI Insights */}
+        {/* Performance Insights */}
         <div className="glass-panel" style={{ padding: '2rem' }}>
-          <h2 style={{ marginBottom: '1.5rem' }}>💡 AI Insights</h2>
+          <h2 style={{ marginBottom: '1.5rem', fontSize: '1.2rem', fontWeight: '600' }}>Performance Insights</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ padding: '1rem', background: 'rgba(16, 185, 129, 0.1)', borderLeft: '4px solid #10b981', borderRadius: '8px' }}>
-              <h4 style={{ color: '#10b981', marginBottom: '5px', fontSize: '0.9rem' }}>🏆 Strongest Asana</h4>
-              <p style={{ fontSize: '0.83rem', color: 'var(--text-main)' }}>Your best is <strong>{(ASANA_NAMES[bestPose] || bestPose)}</strong>. Keep it up!</p>
+            <div style={{ padding: '1rem', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.1)', borderLeft: '4px solid #10b981', borderRadius: '8px' }}>
+              <h4 style={{ color: '#10b981', marginBottom: '5px', fontSize: '0.9rem', fontWeight: '600' }}>Optimal Asana Alignment</h4>
+              <p style={{ fontSize: '0.83rem', color: 'var(--text-secondary)' }}>Your best posture balance is in <strong>{(ASANA_NAMES[bestPose] || bestPose)}</strong>.</p>
             </div>
-            <div style={{ padding: '1rem', background: 'rgba(245, 158, 11, 0.1)', borderLeft: '4px solid #f59e0b', borderRadius: '8px' }}>
-              <h4 style={{ color: '#f59e0b', marginBottom: '5px', fontSize: '0.9rem' }}>⚠️ Tip</h4>
-              <p style={{ fontSize: '0.83rem', color: 'var(--text-main)' }}>Practice each pose for at least 30 seconds for meaningful accuracy readings.</p>
+            <div style={{ padding: '1rem', background: 'rgba(250, 204, 21, 0.05)', border: '1px solid rgba(250, 204, 21, 0.1)', borderLeft: '4px solid #f59e0b', borderRadius: '8px' }}>
+              <h4 style={{ color: '#f59e0b', marginBottom: '5px', fontSize: '0.9rem', fontWeight: '600' }}>Practice Recommendation</h4>
+              <p style={{ fontSize: '0.83rem', color: 'var(--text-secondary)' }}>Maintain each posture hold for at least 30 seconds for optimal metric detection.</p>
             </div>
-            <div style={{ padding: '1rem', background: 'rgba(59, 130, 246, 0.1)', borderLeft: '4px solid #3b82f6', borderRadius: '8px' }}>
-              <h4 style={{ color: '#3b82f6', marginBottom: '5px', fontSize: '0.9rem' }}>⚡ Sessions</h4>
-              <p style={{ fontSize: '0.83rem', color: 'var(--text-main)' }}>You have completed <strong>{sessions.length}</strong> real-time AI-tracked sessions.</p>
+            <div style={{ padding: '1rem', background: 'rgba(99, 102, 241, 0.05)', border: '1px solid rgba(99, 102, 241, 0.1)', borderLeft: '4px solid #6366f1', borderRadius: '8px' }}>
+              <h4 style={{ color: '#6366f1', marginBottom: '5px', fontSize: '0.9rem', fontWeight: '600' }}>Logged Practice Volume</h4>
+              <p style={{ fontSize: '0.83rem', color: 'var(--text-secondary)' }}>You have completed <strong>{sessions.length}</strong> real-time physiological sessions.</p>
             </div>
           </div>
         </div>
@@ -203,7 +206,7 @@ const ProgressTracking = () => {
 
         {/* Radar Chart */}
         <div className="glass-panel" style={{ padding: '2rem' }}>
-          <h2 style={{ marginBottom: '0.5rem' }}>🕸️ Pose Accuracy Radar</h2>
+          <h2 style={{ marginBottom: '0.5rem', fontSize: '1.2rem', fontWeight: '600' }}>Asana Accuracy Profile</h2>
           <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>Your average accuracy across all 12 poses</p>
           {sessions.length === 0 ? <EmptyState message="Practice poses to see your radar chart!" /> : (
             <div style={{ height: '300px' }}>
@@ -222,7 +225,7 @@ const ProgressTracking = () => {
 
         {/* Bar Chart - Practice Frequency */}
         <div className="glass-panel" style={{ padding: '2rem' }}>
-          <h2 style={{ marginBottom: '0.5rem' }}>📊 Practice Frequency</h2>
+          <h2 style={{ marginBottom: '0.5rem', fontSize: '1.2rem', fontWeight: '600' }}>Pose Practice Frequency</h2>
           <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>How many times you practiced each pose</p>
           {barData.length === 0 ? <EmptyState message="Practice different poses to see your frequency chart!" /> : (
             <div style={{ height: '300px' }}>
@@ -247,7 +250,7 @@ const ProgressTracking = () => {
       {/* Row 3: Donut Chart */}
       <div style={{ marginBottom: '2rem' }}>
         <div className="glass-panel" style={{ padding: '2rem' }}>
-          <h2 style={{ marginBottom: '0.5rem' }}>🍩 Time Distribution by Pose</h2>
+          <h2 style={{ marginBottom: '0.5rem', fontSize: '1.2rem', fontWeight: '600' }}>Pose Time Distribution</h2>
           <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>What percentage of your total practice time is spent on each asana</p>
           {donutData.length === 0 ? <EmptyState message="Practice poses to see how you distribute your time!" /> : (
             <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '2rem', justifyContent: 'center' }}>
@@ -282,6 +285,7 @@ const ProgressTracking = () => {
       </>
       )}
     </div>
+    </>
   );
 };
 

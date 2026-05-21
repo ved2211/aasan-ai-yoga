@@ -4,6 +4,8 @@ import { useSmartMat } from '../hooks/useSmartMat';
 import { analyzePose } from '../utils/poseMath';
 import { saveSessionData } from '../utils/userData';
 import { toast } from 'react-hot-toast';
+import { CheckCircle2, AlertTriangle, Play, HelpCircle } from 'lucide-react';
+import ParticleBackground from '../components/ParticleBackground';
 import './YogaSession.css';
 
 const asanas = [
@@ -196,7 +198,9 @@ const YogaSession = () => {
   };
 
   return (
-    <div className="container session-container animate-fade-in">
+    <>
+    <ParticleBackground />
+    <div className="container session-container animate-fade-in" style={{ position: 'relative', zIndex: 1 }}>
       <header className="session-header">
         <div className="header-left">
           <h1 className="gradient-text">Live Yoga Session</h1>
@@ -267,7 +271,7 @@ const YogaSession = () => {
                     className="btn btn-secondary video-preview-btn" 
                     onClick={() => setIsVideoModalOpen(true)}
                   >
-                    📺 View Tutorial Video
+                    <Play size={14} fill="currentColor" /> View Tutorial Video
                   </button>
                 )}
               </div>
@@ -300,21 +304,26 @@ const YogaSession = () => {
               </div>
             </div>
 
-            <div className={`feedback-item ${poseAccuracy > 80 ? 'success' : 'warning'}`}>
-              <span className="icon">{poseAccuracy > 80 ? '✅' : '⚠️'}</span>
+            <div className={`feedback-item ${poseAccuracy > 80 ? 'success' : 'warning'}`} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="icon" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                {poseAccuracy > 80 ? <CheckCircle2 size={16} /> : <AlertTriangle size={16} />}
+              </span>
               <p>{feedback}</p>
             </div>
 
             {poseAccuracy > 0 && poseAccuracy < 65 && (
-              <div className="accuracy-alert-card animate-pulse-border">
-                <span className="alert-bulb">💡</span>
+              <div className="accuracy-alert-card animate-pulse-border" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span className="alert-bulb" style={{ display: 'inline-flex', alignItems: 'center', color: 'var(--danger)' }}>
+                  <HelpCircle size={18} />
+                </span>
                 <div className="alert-content">
-                  <p>Accuracy needs improvement! Watch our curated guide to correct your form.</p>
+                  <p>Alignment adjustment recommended. Review the pose guide to improve form.</p>
                   <button 
                     className="btn btn-primary alert-action-btn"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                     onClick={() => setIsVideoModalOpen(true)}
                   >
-                    ▶ Watch Tutorial Video
+                    <Play size={12} fill="currentColor" /> Watch Tutorial Video
                   </button>
                 </div>
               </div>
@@ -342,7 +351,7 @@ const YogaSession = () => {
         <div className="video-modal-overlay" onClick={() => setIsVideoModalOpen(false)}>
           <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="video-modal-close" onClick={() => setIsVideoModalOpen(false)}>×</button>
-            <h3 className="video-modal-title">🧘‍♂️ {selectedAsana} ({currentAsanaDetails.english}) Tutorial</h3>
+            <h3 className="video-modal-title">{selectedAsana} ({currentAsanaDetails.english}) Tutorial</h3>
             <div className="video-iframe-container">
               <iframe
                 src={`${currentAsanaDetails.videoUrl}?autoplay=1&rel=0`}
@@ -352,12 +361,13 @@ const YogaSession = () => {
               ></iframe>
             </div>
             <div className="video-modal-tips">
-              <strong>💡 Posture Alignment Tip:</strong> Focus on breathing slowly, keeping your core engaged, and aligning your joints according to the visual guides. Adjust your position dynamically to see your score rise!
+              <strong>Posture Alignment Tip:</strong> Focus on breathing slowly, keeping your core engaged, and aligning your joints according to the visual guides. Adjust your position dynamically to see your score rise!
             </div>
           </div>
         </div>
       )}
     </div>
+    </>
   );
 };
 
