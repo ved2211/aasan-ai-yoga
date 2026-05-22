@@ -280,27 +280,8 @@ const YogaSession = () => {
       </header>
 
       <div className="session-layout">
-        <div className="main-camera glass-panel">
-          {!isModelLoaded && (
-             <div className="loading-overlay">
-               <div className="spinner"></div>
-               <p>Loading AI Pose Models...</p>
-             </div>
-          )}
-          <video 
-            ref={videoRef} 
-            autoPlay 
-            playsInline 
-            className="video-feed"
-          ></video>
-          <canvas 
-            ref={canvasRef} 
-            className="pose-canvas"
-          ></canvas>
-        </div>
-
-        <div className="sidebar">
-          
+        {/* Left Sidebar: Target Pose & AI Feedback */}
+        <div className="sidebar left-sidebar">
           {/* Reference Image Panel */}
           <div className="reference-panel glass-panel">
             <h2 style={{ marginBottom: '1rem', fontSize: '1.2rem' }}>Target Asana</h2>
@@ -372,7 +353,30 @@ const YogaSession = () => {
               </div>
             )}
           </div>
+        </div>
 
+        {/* Center Panel: Unobstructed webcam feed */}
+        <div className="main-camera glass-panel">
+          {!isModelLoaded && (
+             <div className="loading-overlay">
+               <div className="spinner"></div>
+               <p>Loading AI Pose Models...</p>
+             </div>
+          )}
+          <video 
+            ref={videoRef} 
+            autoPlay 
+            playsInline 
+            className="video-feed"
+          ></video>
+          <canvas 
+            ref={canvasRef} 
+            className="pose-canvas"
+          ></canvas>
+        </div>
+
+        {/* Right Sidebar: Real-time Smart Mat Visuals */}
+        <div className="sidebar right-sidebar">
           <div className="mat-visualization glass-panel animate-pulse-border">
             <div className="balance-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
               <h2 style={{ fontSize: '1.1rem', margin: 0 }}>Smart Mat Guidance</h2>

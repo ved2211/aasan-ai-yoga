@@ -69,7 +69,7 @@
 /* Session Layout */
 .session-layout {
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: 290px 1fr 290px;
   gap: 1rem;
   align-items: start;
 }
@@ -216,21 +216,24 @@
 .feedback-item.success { background: rgba(74, 222, 128, 0.08); border-left: 3px solid var(--success); color: var(--success); }
 .feedback-item.warning { background: rgba(250, 204, 21, 0.08); border-left: 3px solid var(--warning); color: var(--warning); }
 
-/* Smart Mat */
-.mat-visualization { padding: 1.25rem; }
+.mat-visualization {
+  padding: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .mat-visualization h2 {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text-muted);
-  margin-bottom: 1rem;
-  font-weight: 600;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
 }
 .mat-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 12px;
+  gap: 14px;
+  margin-bottom: 8px;
 }
 
 .mat-cell-wrapper {
@@ -242,7 +245,7 @@
 }
 
 .mat-cell-label {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
   font-weight: 700;
   text-transform: uppercase;
@@ -251,7 +254,7 @@
 
 .mat-cell-visual {
   width: 100%;
-  height: 120px;
+  height: 95px;
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -264,7 +267,7 @@
 }
 
 .mat-cell-visual:hover {
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .mat-cell-fill {
@@ -273,7 +276,7 @@
   bottom: 0;
   left: 0;
   transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
-  opacity: 0.35;
+  opacity: 0.45;
 }
 
 .mat-cell-target-line {
@@ -284,19 +287,19 @@
   left: 0;
   z-index: 5;
   transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 8px #10b981, 0 0 15px #10b981;
+  box-shadow: 0 0 6px #10b981, 0 0 12px #10b981;
 }
 
 .mat-cell-target-line::after {
   content: 'GOAL';
   position: absolute;
-  right: 6px;
+  right: 4px;
   bottom: 2px;
-  font-size: 0.55rem;
+  font-size: 0.5rem;
   font-weight: 800;
   color: #10b981;
   letter-spacing: 0.05em;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .mat-cell-inner-text {
@@ -305,7 +308,7 @@
   align-items: center;
   justify-content: center;
   z-index: 10;
-  padding: 10px;
+  padding: 6px;
   text-align: center;
   width: 100%;
   height: 100%;
@@ -313,7 +316,7 @@
 }
 
 .live-val {
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight: 800;
   color: var(--text-main);
   line-height: 1;
@@ -321,26 +324,63 @@
 }
 
 .target-val {
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   color: var(--text-muted);
   font-weight: 600;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .mat-cell-status {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   font-weight: 800;
   text-transform: uppercase;
-  margin-top: 4px;
+  margin-top: 2px;
   letter-spacing: 0.05em;
   transition: color 0.3s ease;
 }
-/* Mobile */
+/* Responsive adjustments for multi-column dashboards */
+@media (max-width: 1200px) {
+  .session-layout {
+    grid-template-columns: 260px 1fr 260px;
+  }
+}
+
+@media (max-width: 1024px) {
+  /* Stack into 2 columns: Camera on left, sidebars on right */
+  .session-layout {
+    grid-template-columns: 1fr 300px;
+  }
+  .left-sidebar {
+    grid-column: 2;
+  }
+  .main-camera {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  .right-sidebar {
+    grid-column: 2;
+  }
+}
+
 @media (max-width: 768px) {
-  .session-layout { grid-template-columns: 1fr; }
-  .session-header { flex-direction: column; align-items: flex-start; }
-  .main-camera { min-height: 280px; }
-  .asana-selector { width: 100%; }
+  /* Full single-column layout stack on mobile */
+  .session-layout {
+    grid-template-columns: 1fr;
+  }
+  .left-sidebar, .main-camera, .right-sidebar {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+  }
+  .main-camera {
+    min-height: 280px;
+  }
+  .session-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .asana-selector {
+    width: 100%;
+  }
 }
 
 /* ─── VIDEO RECOMMENDATION STYLES ────────────────────────────────────────────── */
